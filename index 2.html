@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Laxoria Social</title>
+  <style>
+    body { margin:0; font-family: Arial, sans-serif; background: linear-gradient(to bottom, #A8E6CF, #C39BD3);}
+    header { background:white; padding:10px 20px; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+    header h1 { color:#6C5B7B; margin:0; }
+    section { padding:10px 20px; margin-bottom:10px; display:none;}
+    .active { display:block;}
+    .nav { position:fixed; bottom:0; width:100%; background:white; display:flex; justify-content:space-around; padding:10px 0; box-shadow:0 -2px 5px rgba(0,0,0,0.1);}
+    .nav button { background:none; border:none; font-size:24px; color:#FF6F91; cursor:pointer;}
+    .stories, .feed { display:flex; overflow-x:auto; gap:10px; }
+    .story, .post { background:white; padding:10px; border-radius:10px; min-width:100px; flex-shrink:0; box-shadow:0 1px 3px rgba(0,0,0,0.1);}
+    .story img, .post img { border-radius:50%; width:50px; height:50px; }
+    .post img, .post video { border-radius:10px; width:100%; margin-top:5px; }
+    .profile { background:white; padding:10px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.1);}
+    .btn { padding:5px 10px; border:none; border-radius:5px; color:white; cursor:pointer; margin-right:5px;}
+    .btn-pink { background:#FF6F91;}
+    .btn-purple { background:#C39BD3;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Laxoria</h1>
+  </header>
+
+  <section id="home" class="active">
+    <h2>Home</h2>
+    <div class="stories">
+      <div class="story"><img src="https://via.placeholder.com/50"/><p>User1</p></div>
+      <div class="story"><img src="https://via.placeholder.com/50"/><p>User2</p></div>
+      <div class="story"><button class="btn btn-pink">+</button><p>Add Story</p></div>
+    </div>
+    <div class="feed">
+      <div class="post">
+        <div><img src="https://via.placeholder.com/40"/><strong>User1</strong></div>
+        <p>هذا منشور صورة</p>
+        <img src="https://via.placeholder.com/300"/>
+        <div><button>❤️ 5</button><button>💬 Comment</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="messages">
+    <h2>Messages</h2>
+    <p>قائمة الرسائل تظهر هنا</p>
+  </section>
+
+  <section id="profile">
+    <h2>Profile</h2>
+    <div class="profile">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="https://via.placeholder.com/100" alt="profile"/>
+        <div>
+          <h3>Laxoria User</h3>
+          <p>Privacy: Public</p>
+          <p>Account Type: Personal</p>
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+        <button class="btn btn-pink">Toggle Privacy</button>
+        <button class="btn btn-purple">Switch Account Type</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="search">
+    <h2>Search</h2>
+    <input type="text" placeholder="ابحث عن فيديوهات أو أشخاص..." style="width:100%;padding:8px;border-radius:5px;border:1px solid #ccc;"/>
+  </section>
+
+  <div class="nav">
+    <button onclick="showPage('home')">🏠</button>
+    <button onclick="showPage('messages')">💬</button>
+    <button onclick="showPage('search')">🔍</button>
+    <button onclick="showPage('profile')">👤</button>
+  </div>
+
+  <script>
+    function showPage(pageId){
+      const pages = ['home','messages','profile','search'];
+      pages.forEach(id => {
+        document.getElementById(id).classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
