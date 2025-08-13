@@ -25,7 +25,7 @@
   .post img, .post video { border-radius:10px; width:100%; margin-top:5px; }
   .profile { background:white; padding:10px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
   .btn { padding:5px 10px; border:none; border-radius:5px; cursor:pointer; margin-right:5px; font-weight:bold; background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); color:white;}
-  input[type="text"] { width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;}
+  input[type="text"], input[type="email"], input[type="password"] { width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; margin-bottom:10px;}
 </style>
 </head>
 <body>
@@ -33,8 +33,18 @@
   <h1>Laxoria</h1>
 </header>
 
+<!-- Authentication Page -->
+<section id="auth" class="active">
+  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Login / Register</h2>
+  <input type="email" id="authEmail" placeholder="Email" />
+  <input type="password" id="authPassword" placeholder="Password" />
+  <button class="btn" onclick="login()">Login</button>
+  <button class="btn" onclick="register()">Register</button>
+  <p id="authStatus"></p>
+</section>
+
 <!-- Home Page -->
-<section id="home" class="active">
+<section id="home">
   <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Home</h2>
   <div class="stories" id="stories"></div>
   <div class="feed" id="feed"></div>
@@ -51,32 +61,30 @@
   <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Profile</h2>
   <div class="profile" id="profileInfo"></div>
 
-  <!-- Upload section -->
   <h3>Upload Image / Video</h3>
   <input type="file" id="fileInput" />
   <button class="btn" onclick="uploadFile()">Upload</button>
   <p id="uploadStatus"></p>
 
-  <!-- Account Type -->
   <h3>Account Type</h3>
   <select id="accountType">
     <option value="personal">Personal</option>
     <option value="business">Business</option>
   </select>
 
-  <!-- Privacy -->
   <h3>Privacy</h3>
   <select id="privacy">
     <option value="public">Public</option>
     <option value="private">Private</option>
   </select>
-</section>
 
+  <button class="btn" onclick="logout()">Logout</button>
+</section>
 
 <!-- Search Page -->
 <section id="search">
   <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Search</h2>
-  <input type="text" id="searchInput" placeholder="ابحث عن فيديوهات أو أشخاص..."/>
+  <input type="text" id="searchInput" placeholder="ابحث عن فيديوهات أو أشخاص..." />
 </section>
 
 <!-- Navigation Bar -->
@@ -89,19 +97,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const SUPABASE_URL = 'https://haeptsutgwyplaaozuev.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhZXB0c3V0Z3d5cGxhYW96dWV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNzAyNTIsImV4cCI6MjA3MDY0NjI1Mn0.7rEfjIGrTqlVhjCByWF4wirCe3X7JEMo6yGCZob7wOU';
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  function showPage(pageId){
-    const pages = ['home','messages','profile','search'];
-    pages.forEach(id => document.getElementById(id).classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-  }
-  const SUPABASE_URL = 'https://haeptsutgwyplaaozuev.supabase.co';
-const SUPABASE_KEY = 'YOUR_ANON_KEY'; // ضع هنا مفتاحك الصحيح
+const SUPABASE_URL = 'https://haeptsutgwyplaaozuev.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhZXB0c3V0Z3d5cGxhYW96dWV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNzAyNTIsImV4cCI6MjA3MDY0NjI1Mn0.7rEfjIGrTqlVhjCByWF4wirCe3X7JEMo6yGCZob7wOU'; // ضع مفتاح Supabase الخاص بك
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 let currentUser = null;
 
 function showPage(pageId){
@@ -116,7 +114,7 @@ async function register() {
   const password = document.getElementById('authPassword').value;
   const { data, error } = await supabase.auth.signUp({ email, password });
   const authStatus = document.getElementById('authStatus');
-  if(error) { authStatus.textContent = error.message; return; }
+  if(error){ authStatus.textContent = error.message; return; }
   authStatus.textContent = 'Registered! Please login.';
 }
 
@@ -126,7 +124,7 @@ async function login() {
   const password = document.getElementById('authPassword').value;
   const { data: session, error } = await supabase.auth.signInWithPassword({ email, password });
   const authStatus = document.getElementById('authStatus');
-  if(error) { authStatus.textContent = error.message; return; }
+  if(error){ authStatus.textContent = error.message; return; }
   currentUser = session.user;
   authStatus.textContent = 'Logged in!';
   showPage('home');
@@ -172,115 +170,27 @@ async function loadProfile(){
 // رفع الملفات
 async function uploadFile() {
   if(!currentUser) { alert('Please login first'); return; }
-
   const file = document.getElementById('fileInput').files[0];
   const uploadStatus = document.getElementById('uploadStatus');
-  if (!file) { uploadStatus.textContent = 'Please select a file first.'; return; }
-
+  if(!file){ uploadStatus.textContent = 'Please select a file first.'; return; }
   const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
-
   const { data, error } = await supabase.storage.from('media').upload(fileName, file);
   if(error){ uploadStatus.textContent = 'Upload failed: ' + error.message; return; }
-
   const { publicUrl, error: urlError } = supabase.storage.from('media').getPublicUrl(fileName);
   if(urlError){ uploadStatus.textContent = 'URL error: ' + urlError.message; return; }
-
   const accountType = document.getElementById('accountType').value;
   const privacy = document.getElementById('privacy').value;
-
-  // تحديث Users table
   await supabase.from('Users').upsert({
     id: currentUser.id,
     account_type: accountType,
     privacy: privacy
   });
-
   const { error: postError } = await supabase.from('Posts').insert([
-    {
-      user_id: currentUser.id,
-      content: `Uploaded via profile page`,
-      image_url: file.type.startsWith('image/') ? publicUrl : null,
-      video_url: file.type.startsWith('video/') ? publicUrl : null,
-      created_at: new Date(),
-    }
+    { user_id: currentUser.id, content:'Uploaded via profile', image_url: file.type.startsWith('image/')?publicUrl:null, video_url:file.type.startsWith('video/')?publicUrl:null, created_at:new Date() }
   ]);
-
   if(postError){ uploadStatus.textContent = 'DB insert error: ' + postError.message; return; }
-
   uploadStatus.textContent = 'File uploaded successfully!';
   loadPosts();
-}
-
-
-  async function loadPosts(){
-    const { data, error } = await supabase.from('Posts').select('*').order('created_at',{ascending:false});
-    if(error){ console.error(error); return; }
-    const feed = document.getElementById('feed');
-    feed.innerHTML = '';
-    data.forEach(post => {
-      const div = document.createElement('div');
-      div.className = 'post';
-      div.innerHTML = `<div><strong>User ${post.user_id}</strong></div><p>${post.content}</p>` + 
-                      (post.image_url ? `<img src="${post.image_url}"/>`:'') +
-                      (post.video_url ? `<video src="${post.video_url}" controls></video>`:'');
-      feed.appendChild(div);
-    });
-  }
-
-  loadPosts();
-  async function uploadFile() {
-  const file = document.getElementById('fileInput').files[0];
-  const uploadStatus = document.getElementById('uploadStatus');
-  if (!file) {
-    uploadStatus.textContent = 'Please select a file first.';
-    return;
-  }
-
-  // Generate a unique file name
-  const fileName = `${Date.now()}_${file.name}`;
-
-  // Upload to Supabase Storage (bucket "media")
-  const { data, error } = await supabase.storage
-    .from('media')
-    .upload(fileName, file);
-
-  if (error) {
-    uploadStatus.textContent = 'Upload failed: ' + error.message;
-    return;
-  }
-
-  // Get public URL
-  const { publicUrl, error: urlError } = supabase.storage
-    .from('media')
-    .getPublicUrl(fileName);
-
-  if (urlError) {
-    uploadStatus.textContent = 'URL error: ' + urlError.message;
-    return;
-  }
-
-  // Insert into Posts table
-  const userId = 1; // بدّل هذا مع الـ user ID الفعلي بعد تسجيل الدخول
-  const accountType = document.getElementById('accountType').value;
-  const privacy = document.getElementById('privacy').value;
-
-  const { data: postData, error: postError } = await supabase.from('Posts').insert([
-    {
-      user_id: userId,
-      content: `Uploaded via profile page`,
-      image_url: file.type.startsWith('image/') ? publicUrl : null,
-      video_url: file.type.startsWith('video/') ? publicUrl : null,
-      created_at: new Date(),
-    }
-  ]);
-
-  if (postError) {
-    uploadStatus.textContent = 'DB insert error: ' + postError.message;
-    return;
-  }
-
-  uploadStatus.textContent = 'File uploaded successfully!';
-  loadPosts(); // تحديث المنشورات في الصفحة الرئيسية
 }
 </script>
 </body>
