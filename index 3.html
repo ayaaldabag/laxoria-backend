@@ -1,93 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Laxoria Social</title>
 <style>
   body { margin:0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:white; color:#333;}
-  header { background:white; padding:20px; text-align:center; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-  header h1 {
-    font-family: 'Brush Script MT', cursive;
-    font-size:48px;
+  header { background:white; padding:20px; text-align:center; box-shadow:0 2px 5px rgba(0,0,0,0.08);}
+  header h1 { font-family: 'Brush Script MT', cursive; font-size:48px;
     background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin:0;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin:0;
   }
-  section { padding:20px; margin-bottom:10px; display:none;}
+  section { padding:18px; margin-bottom:10px; display:none; max-width:900px; margin-left:auto; margin-right:auto;}
   .active { display:block;}
-  .nav { position:fixed; bottom:0; width:100%; background:white; display:flex; justify-content:space-around; padding:10px 0; box-shadow:0 -2px 5px rgba(0,0,0,0.1);}
-  .nav button { background:none; border:none; font-size:26px; cursor:pointer; background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
-  .stories, .feed { display:flex; overflow-x:auto; gap:10px; }
-  .story, .post { background:white; padding:10px; border-radius:10px; min-width:100px; flex-shrink:0; box-shadow:0 1px 3px rgba(0,0,0,0.1);}
-  .story img, .post img { border-radius:50%; width:50px; height:50px; }
-  .post img, .post video { border-radius:10px; width:100%; margin-top:5px; }
-  .profile { background:white; padding:10px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
-  .btn { padding:5px 10px; border:none; border-radius:5px; cursor:pointer; margin-right:5px; font-weight:bold; background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); color:white;}
-  input[type="text"], input[type="email"], input[type="password"] { width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; margin-bottom:10px;}
+  .nav { position:fixed; bottom:0; left:0; right:0; width:100%; background:white; display:flex; justify-content:space-around; padding:10px 0; box-shadow:0 -2px 6px rgba(0,0,0,0.06);}
+  .nav button { background:none; border:none; font-size:24px; cursor:pointer; background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+  .stories, .feed { display:flex; overflow-x:auto; gap:12px; }
+  .story, .post { background:#fff; padding:12px; border-radius:12px; min-width:120px; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+  .story img, .post img { border-radius:50%; width:56px; height:56px; object-fit:cover; }
+  .post img, .post video { border-radius:10px; width:100%; margin-top:8px; max-height:420px; object-fit:cover; }
+  .profile { background:#fff; padding:12px; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .btn { padding:8px 12px; border:none; border-radius:8px; cursor:pointer; margin-right:6px; font-weight:600;
+         background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); color:white; }
+  input[type="text"], input[type="email"], input[type="password"], select { width:100%; padding:10px; border-radius:8px; border:1px solid #e0e0e0; margin-bottom:10px; }
+  #uploadStatus, #authStatus { color:#555; margin-top:8px; }
 </style>
 </head>
 <body>
-<header>
-  <h1>Laxoria</h1>
-</header>
+<header><h1>Laxoria</h1></header>
 
-<!-- Authentication Page -->
+<!-- Auth -->
 <section id="auth" class="active">
-  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Login / Register</h2>
-  <input type="email" id="authEmail" placeholder="Email" />
-  <input type="password" id="authPassword" placeholder="Password" />
-  <button class="btn" onclick="login()">Login</button>
-  <button class="btn" onclick="register()">Register</button>
+  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Login / Register</h2>
+  <input id="authEmail" type="email" placeholder="Email" />
+  <input id="authPassword" type="password" placeholder="Password" />
+  <div style="display:flex; gap:8px;">
+    <button class="btn" onclick="login()">Login</button>
+    <button class="btn" onclick="register()">Register</button>
+  </div>
   <p id="authStatus"></p>
 </section>
 
-<!-- Home Page -->
+<!-- Home -->
 <section id="home">
-  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Home</h2>
-  <div class="stories" id="stories"></div>
+  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Home</h2>
+  <div class="stories" id="stories">
+    <!-- stories placeholders -->
+  </div>
   <div class="feed" id="feed"></div>
 </section>
 
-<!-- Messages Page -->
+<!-- Messages -->
 <section id="messages">
-  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Messages</h2>
+  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Messages</h2>
   <div id="messagesList"></div>
 </section>
 
-<!-- Profile Page -->
+<!-- Profile -->
 <section id="profile">
-  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Profile</h2>
-  <div class="profile" id="profileInfo"></div>
+  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Profile</h2>
+  <div id="profileInfo" class="profile"></div>
 
   <h3>Upload Image / Video</h3>
-  <input type="file" id="fileInput" />
-  <button class="btn" onclick="uploadFile()">Upload</button>
-  <p id="uploadStatus"></p>
+  <input id="fileInput" type="file" accept="image/*,video/*" />
+  <div style="margin-top:8px;">
+    <button id="uploadBtn" class="btn" onclick="uploadFile()">Upload</button>
+    <span id="uploadStatus"></span>
+  </div>
 
   <h3>Account Type</h3>
-  <select id="accountType">
-    <option value="personal">Personal</option>
-    <option value="business">Business</option>
-  </select>
+  <select id="accountType"><option value="personal">Personal</option><option value="business">Business</option></select>
 
   <h3>Privacy</h3>
-  <select id="privacy">
-    <option value="public">Public</option>
-    <option value="private">Private</option>
-  </select>
+  <select id="privacy"><option value="public">Public</option><option value="private">Private</option></select>
 
-  <button class="btn" onclick="logout()">Logout</button>
+  <div style="margin-top:12px;"><button class="btn" onclick="logout()">Logout</button></div>
 </section>
 
-<!-- Search Page -->
+<!-- Search -->
 <section id="search">
-  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Search</h2>
-  <input type="text" id="searchInput" placeholder="ابحث عن فيديوهات أو أشخاص..." />
+  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Search</h2>
+  <input id="searchInput" type="text" placeholder="ابحث عن فيديوهات أو أشخاص..." />
 </section>
 
-<!-- Navigation Bar -->
+<!-- Nav -->
 <div class="nav">
   <button onclick="showPage('home')">🏠</button>
   <button onclick="showPage('messages')">💬</button>
@@ -95,54 +91,45 @@
   <button onclick="showPage('profile')">👤</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Supabase client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-/* ====== Supabase Client (إصلاح التعارض) ====== */
+/* ---------- إعداد Supabase (ضع ANON KEY هنا) ---------- */
 const SUPABASE_URL = 'https://haeptsutgwyplaaozuev.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhZXB0c3V0Z3d5cGxhYW96dWV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNzAyNTIsImV4cCI6MjA3MDY0NjI1Mn0.7rEfjIGrTqlVhjCByWF4wirCe3X7JEMo6yGCZob7wOU';
+const SUPABASE_ANON_KEY = '.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhZXB0c3V0Z3d5cGxhYW96dWV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNzAyNTIsImV4cCI6MjA3MDY0NjI1Mn0.7rEfjIGrTqlVhjCByWF4wirCe3X7JEMo6yGCZob7wOU'; // <-- ضع هنا مفتاح anon الخاص بمشروعك (ليس service_role)
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
 
-/* ====== Navigation ====== */
+/* ---------- تنقل الصفحات ---------- */
 function showPage(pageId){
   const pages = ['auth','home','messages','profile','search'];
-  pages.forEach(id => document.getElementById(id).classList.remove('active'));
-  document.getElementById(pageId).classList.add('active');
+  pages.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.classList.remove('active');
+  });
+  const target = document.getElementById(pageId);
+  if(target) target.classList.add('active');
 }
 
-/* ====== Auth (Register / Login / Logout) ====== */
-async function register() {
-  const email = document.getElementById('authEmail').value.trim();
-  const password = document.getElementById('authPassword').value;
-  const { data, error } = await sb.auth.signUp({ email, password });
-  const authStatus = document.getElementById('authStatus');
-  if(error){ authStatus.textContent = error.message; return; }
-  authStatus.textContent = 'Registered! Please check your email (if confirmation enabled) then login.';
-}
+/* ---------- فحص الجلسة عند التحميل ---------- */
+(async function init(){
+  try{
+    const { data: sessionData } = await sb.auth.getSession();
+    currentUser = sessionData?.session?.user ?? null;
+  }catch(e){ currentUser = null; }
+  if(currentUser){
+    showPage('home');
+    loadPosts();
+    loadProfile();
+  } else {
+    showPage('auth');
+  }
+})();
 
-async function login() {
-  const email = document.getElementById('authEmail').value.trim();
-  const password = document.getElementById('authPassword').value;
-  const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  const authStatus = document.getElementById('authStatus');
-  if(error){ authStatus.textContent = error.message; return; }
-  currentUser = data?.user || null;
-  authStatus.textContent = 'Logged in!';
-  showPage('home');
-  loadPosts();
-  loadProfile();
-}
-
-async function logout() {
-  await sb.auth.signOut();
-  currentUser = null;
-  showPage('auth');
-}
-
-/* حافظ على الجلسة عند التحديث */
+/* حدث تغيير المصادقة */
 sb.auth.onAuthStateChange((event, session) => {
-  currentUser = session?.user || null;
+  currentUser = session?.user ?? null;
   if(currentUser){
     showPage('home');
     loadPosts();
@@ -152,98 +139,149 @@ sb.auth.onAuthStateChange((event, session) => {
   }
 });
 
-/* ====== Feed / Posts ====== */
+/* ---------- تسجيل / تسجيل دخول / خروج ---------- */
+async function register(){
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const out = document.getElementById('authStatus');
+  out.textContent = 'Registering...';
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if(error){ out.textContent = 'Error: ' + error.message; return; }
+  out.textContent = 'Registered — check your email (if confirmation enabled).';
+}
+
+async function login(){
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const out = document.getElementById('authStatus');
+  out.textContent = 'Logging in...';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if(error){ out.textContent = 'Error: ' + error.message; return; }
+  currentUser = data?.user ?? null;
+  out.textContent = 'Logged in!';
+  showPage('home');
+  await loadPosts();
+  await loadProfile();
+}
+
+async function logout(){
+  await sb.auth.signOut();
+  currentUser = null;
+  showPage('auth');
+}
+
+/* ---------- تحميل المنشورات ---------- */
 async function loadPosts(){
-  if(!currentUser) return;
-  const { data, error } = await sb
-    .from('Posts')
-    .select('*')
-    .order('created_at', { ascending:false });
-
-  if(error){ console.error(error); return; }
-
+  // نحاول تحميل المنشورات حتى لو ما في currentUser (إذا RLS يسمح للجميع برؤية المنشورات العامة)
   const feed = document.getElementById('feed');
+  feed.innerHTML = '<p>Loading posts...</p>';
+  const { data, error } = await sb.from('Posts').select('*').order('created_at', { ascending:false });
+  if(error){
+    feed.innerHTML = '<p>Could not load posts: ' + (error.message || error) + '</p>';
+    console.error(error);
+    return;
+  }
   feed.innerHTML = '';
   data.forEach(post => {
     const div = document.createElement('div');
     div.className = 'post';
-    div.innerHTML =
-      `<div><strong>User ${post.user_id}</strong></div>
-       <p>${post.content ?? ''}</p>` +
-      (post.image_url ? `<img src="${post.image_url}" />` : '') +
-      (post.video_url ? `<video src="${post.video_url}" controls></video>` : '');
+    div.innerHTML = `<div><strong>User</strong></div>
+                     <p>${escapeHtml(post.content ?? '')}</p>` +
+                    (post.image_url ? `<img src="${escapeHtml(post.image_url)}" alt="post image">` : '') +
+                    (post.video_url ? `<video src="${escapeHtml(post.video_url)}" controls></video>` : '');
     feed.appendChild(div);
   });
 }
 
-/* ====== Profile ====== */
+/* ---------- تحميل ملف البروفايل ---------- */
 async function loadProfile(){
-  if(!currentUser) return;
-
-  // لو جدول Users ما موجود، هذا النداء راح يفشل بهدوء
-  const { data, error } = await sb
-    .from('Users')
-    .select('*')
-    .eq('id', currentUser.id)
-    .single();
-
   const profileDiv = document.getElementById('profileInfo');
+  if(!currentUser){ profileDiv.innerHTML = '<p>Please login to view profile.</p>'; return; }
+  // نبحث في جدول Users عن بيانات إضافية
+  const { data, error } = await sb.from('Users').select('*').eq('id', currentUser.id).single();
   if(error){
-    // عرض معلومات أساسية حتى بدون جدول Users
-    profileDiv.innerHTML = `<p>Email: ${currentUser.email}</p>
-                            <p>Account Type: -</p>
-                            <p>Privacy: -</p>`;
+    // لو ما فيه جدول أو خطأ، نعرض معلومات المصادقة فقط
+    profileDiv.innerHTML = `<p>Email: ${escapeHtml(currentUser.email)}</p><p>Account Type: -</p><p>Privacy: -</p>`;
     return;
   }
-
-  profileDiv.innerHTML = `<p>Email: ${currentUser.email}</p>
-                          <p>Account Type: ${data?.account_type || 'Personal'}</p>
-                          <p>Privacy: ${data?.privacy || 'Public'}</p>`;
+  profileDiv.innerHTML = `<p>Email: ${escapeHtml(currentUser.email)}</p>
+                          <p>Account Type: ${escapeHtml(data.account_type || 'Personal')}</p>
+                          <p>Privacy: ${escapeHtml(data.privacy || 'Public')}</p>` +
+                          (data.profile_image ? `<img src="${escapeHtml(data.profile_image)}" style="width:100px;height:100px;border-radius:8px;object-fit:cover;margin-top:8px">` : '');
 }
 
-/* ====== Upload (Storage + Post) ====== */
-async function uploadFile() {
-  if(!currentUser){ alert('Please login first'); return; }
-
-  const file = document.getElementById('fileInput').files[0];
+/* ---------- رفع ملف (يتحقق من النوع والحجم) ---------- */
+async function uploadFile(){
   const uploadStatus = document.getElementById('uploadStatus');
+  if(!currentUser){ alert('Please login first'); return; }
+  const file = document.getElementById('fileInput').files[0];
   if(!file){ uploadStatus.textContent = 'Please select a file first.'; return; }
 
-  // اسم فريد للملف
-  const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
+  // تحقق نوع الملف وحجم (مثلاً 80MB حد)
+  if(!(file.type.startsWith('image/') || file.type.startsWith('video/'))){
+    uploadStatus.textContent = 'Only image or video files are allowed.';
+    return;
+  }
+  const MAX = 80 * 1024 * 1024;
+  if(file.size > MAX){ uploadStatus.textContent = 'File too large (max 80MB).'; return; }
 
-  // رفع الملف
+  const uploadBtn = document.getElementById('uploadBtn');
+  uploadBtn.disabled = true;
+  uploadStatus.textContent = 'Uploading...';
+
+  const fileName = `${currentUser.id}_${Date.now()}_${sanitizeFilename(file.name)}`;
+
+  // upload
   const { data: upData, error: upErr } = await sb.storage.from('media').upload(fileName, file);
-  if(upErr){ uploadStatus.textContent = 'Upload failed: ' + upErr.message; return; }
+  if(upErr){ uploadStatus.textContent = 'Upload failed: ' + upErr.message; uploadBtn.disabled = false; return; }
 
-  // الحصول على الرابط العام (إصلاح الـ getPublicUrl)
-  const { data: urlData } = sb.storage.from('media').getPublicUrl(fileName);
-  const publicUrl = urlData?.publicUrl;
-  if(!publicUrl){ uploadStatus.textContent = 'Could not get public URL.'; return; }
+  // حاول getPublicUrl أولًا (works if bucket public)
+  let publicUrl = null;
+  try {
+    const { data: urlData } = sb.storage.from('media').getPublicUrl(fileName);
+    publicUrl = urlData?.publicUrl ?? null;
+  } catch(e){
+    publicUrl = null;
+  }
 
-  // حفظ إعدادات الحساب بالبروفايل (اختياري إذا عندك جدول Users بنوع UUID)
+  // إذا bucket خاص، نأخذ signed URL (مدة 24 ساعة)
+  if(!publicUrl){
+    const { data: signedData, error: signedErr } = await sb.storage.from('media').createSignedUrl(fileName, 60*60*24);
+    if(signedErr){ uploadStatus.textContent = 'Could not get file URL: ' + signedErr.message; uploadBtn.disabled = false; return; }
+    publicUrl = signedData?.signedUrl ?? null;
+  }
+
+  if(!publicUrl){ uploadStatus.textContent = 'Could not obtain file URL.'; uploadBtn.disabled = false; return; }
+
+  // تحديث جدول Users (upsert) ومزامنة account/privacy
   const accountType = document.getElementById('accountType').value;
   const privacy = document.getElementById('privacy').value;
   await sb.from('Users').upsert({
-    id: currentUser.id,          // لازم الحقل id في Users يكون UUID
+    id: currentUser.id,
     account_type: accountType,
-    privacy: privacy
+    privacy: privacy,
+    profile_image: file.type.startsWith('image/') ? publicUrl : null
   });
 
   // إضافة منشور
   const { error: postErr } = await sb.from('Posts').insert([{
-    user_id: currentUser.id,     // لازم user_id في Posts يكون UUID
+    user_id: currentUser.id,
     content: 'Uploaded via profile',
     image_url: file.type.startsWith('image/') ? publicUrl : null,
     video_url: file.type.startsWith('video/') ? publicUrl : null,
     created_at: new Date()
   }]);
-
-  if(postErr){ uploadStatus.textContent = 'DB insert error: ' + postErr.message; return; }
+  if(postErr){ uploadStatus.textContent = 'DB insert error: ' + postErr.message; uploadBtn.disabled = false; return; }
 
   uploadStatus.textContent = 'File uploaded successfully!';
-  loadPosts();
+  uploadBtn.disabled = false;
+  await loadPosts();
 }
+
+/* ---------- أدوات مساعدة ---------- */
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
+function sanitizeFilename(name){ return name.replace(/[^a-zA-Z0-9._-]/g,'_'); }
+
 </script>
 </body>
 </html>
