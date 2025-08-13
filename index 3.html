@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Laxoria Social</title>
 <style>
   body { margin:0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:white; color:#333;}
@@ -44,9 +44,7 @@
 <!-- Home -->
 <section id="home">
   <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Home</h2>
-  <div class="stories" id="stories">
-    <!-- stories placeholders -->
-  </div>
+  <div class="stories" id="stories"></div>
   <div class="feed" id="feed"></div>
 </section>
 
@@ -91,20 +89,18 @@
   <button onclick="showPage('profile')">👤</button>
 </div>
 
-<!-- Supabase client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-/* ---------- إعداد Supabase (ضع ANON KEY هنا) ---------- */
+// ---------- Supabase ----------
 const SUPABASE_URL = 'https://haeptsutgwyplaaozuev.supabase.co';
-const SUPABASE_ANON_KEY = '.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhZXB0c3V0Z3d5cGxhYW96dWV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNzAyNTIsImV4cCI6MjA3MDY0NjI1Mn0.7rEfjIGrTqlVhjCByWF4wirCe3X7JEMo6yGCZob7wOU'; // <-- ضع هنا مفتاح anon الخاص بمشروعك (ليس service_role)
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_ANON_KEY = '.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhZXB0c3V0Z3d5cGxhYW96dWV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNzAyNTIsImV4cCI6MjA3MDY0NjI1Mn0.7rEfjIGrTqlVhjCByWF4wirCe3X7JEMo6yGCZob7wOU';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
 
-/* ---------- تنقل الصفحات ---------- */
+// ---------- Navigation ----------
 function showPage(pageId){
-  const pages = ['auth','home','messages','profile','search'];
-  pages.forEach(id => {
+  ['auth','home','messages','profile','search'].forEach(id=>{
     const el = document.getElementById(id);
     if(el) el.classList.remove('active');
   });
@@ -112,34 +108,23 @@ function showPage(pageId){
   if(target) target.classList.add('active');
 }
 
-/* ---------- فحص الجلسة عند التحميل ---------- */
+// ---------- Session check ----------
 (async function init(){
   try{
-    const { data: sessionData } = await sb.auth.getSession();
-    currentUser = sessionData?.session?.user ?? null;
+    const { data } = await sb.auth.getSession();
+    currentUser = data?.session?.user ?? null;
   }catch(e){ currentUser = null; }
-  if(currentUser){
-    showPage('home');
-    loadPosts();
-    loadProfile();
-  } else {
-    showPage('auth');
-  }
+  if(currentUser){ showPage('home'); loadPosts(); loadProfile(); }
+  else{ showPage('auth'); }
 })();
 
-/* حدث تغيير المصادقة */
-sb.auth.onAuthStateChange((event, session) => {
+sb.auth.onAuthStateChange((event, session)=>{
   currentUser = session?.user ?? null;
-  if(currentUser){
-    showPage('home');
-    loadPosts();
-    loadProfile();
-  } else {
-    showPage('auth');
-  }
+  if(currentUser){ showPage('home'); loadPosts(); loadProfile(); }
+  else{ showPage('auth'); }
 });
 
-/* ---------- تسجيل / تسجيل دخول / خروج ---------- */
+// ---------- Auth ----------
 async function register(){
   const email = document.getElementById('authEmail').value.trim();
   const password = document.getElementById('authPassword').value;
@@ -147,7 +132,7 @@ async function register(){
   out.textContent = 'Registering...';
   const { data, error } = await sb.auth.signUp({ email, password });
   if(error){ out.textContent = 'Error: ' + error.message; return; }
-  out.textContent = 'Registered — check your email (if confirmation enabled).';
+  out.textContent = 'Registered — check your email.';
 }
 
 async function login(){
@@ -170,19 +155,14 @@ async function logout(){
   showPage('auth');
 }
 
-/* ---------- تحميل المنشورات ---------- */
+// ---------- Load posts ----------
 async function loadPosts(){
-  // نحاول تحميل المنشورات حتى لو ما في currentUser (إذا RLS يسمح للجميع برؤية المنشورات العامة)
   const feed = document.getElementById('feed');
   feed.innerHTML = '<p>Loading posts...</p>';
   const { data, error } = await sb.from('Posts').select('*').order('created_at', { ascending:false });
-  if(error){
-    feed.innerHTML = '<p>Could not load posts: ' + (error.message || error) + '</p>';
-    console.error(error);
-    return;
-  }
+  if(error){ feed.innerHTML = '<p>Could not load posts.</p>'; console.error(error); return; }
   feed.innerHTML = '';
-  data.forEach(post => {
+  data.forEach(post=>{
     const div = document.createElement('div');
     div.className = 'post';
     div.innerHTML = `<div><strong>User</strong></div>
@@ -193,93 +173,69 @@ async function loadPosts(){
   });
 }
 
-/* ---------- تحميل ملف البروفايل ---------- */
+// ---------- Load profile ----------
 async function loadProfile(){
   const profileDiv = document.getElementById('profileInfo');
   if(!currentUser){ profileDiv.innerHTML = '<p>Please login to view profile.</p>'; return; }
-  // نبحث في جدول Users عن بيانات إضافية
   const { data, error } = await sb.from('Users').select('*').eq('id', currentUser.id).single();
-  if(error){
-    // لو ما فيه جدول أو خطأ، نعرض معلومات المصادقة فقط
-    profileDiv.innerHTML = `<p>Email: ${escapeHtml(currentUser.email)}</p><p>Account Type: -</p><p>Privacy: -</p>`;
-    return;
-  }
+  if(error){ profileDiv.innerHTML = `<p>Email: ${escapeHtml(currentUser.email)}</p><p>Account Type: -</p><p>Privacy: -</p>`; return; }
   profileDiv.innerHTML = `<p>Email: ${escapeHtml(currentUser.email)}</p>
-                          <p>Account Type: ${escapeHtml(data.account_type || 'Personal')}</p>
-                          <p>Privacy: ${escapeHtml(data.privacy || 'Public')}</p>` +
-                          (data.profile_image ? `<img src="${escapeHtml(data.profile_image)}" style="width:100px;height:100px;border-radius:8px;object-fit:cover;margin-top:8px">` : '');
+                          <p>Account Type: ${escapeHtml(data.account_type||'Personal')}</p>
+                          <p>Privacy: ${escapeHtml(data.privacy||'Public')}</p>` +
+                          (data.profile_image ? `<img src="${escapeHtml(data.profile_image)}" style="width:100px;height:100px;border-radius:8px;margin-top:8px">` : '');
 }
 
-/* ---------- رفع ملف (يتحقق من النوع والحجم) ---------- */
+// ---------- Upload ----------
 async function uploadFile(){
   const uploadStatus = document.getElementById('uploadStatus');
   if(!currentUser){ alert('Please login first'); return; }
   const file = document.getElementById('fileInput').files[0];
-  if(!file){ uploadStatus.textContent = 'Please select a file first.'; return; }
-
-  // تحقق نوع الملف وحجم (مثلاً 80MB حد)
-  if(!(file.type.startsWith('image/') || file.type.startsWith('video/'))){
-    uploadStatus.textContent = 'Only image or video files are allowed.';
-    return;
-  }
-  const MAX = 80 * 1024 * 1024;
-  if(file.size > MAX){ uploadStatus.textContent = 'File too large (max 80MB).'; return; }
+  if(!file){ uploadStatus.textContent='Select a file first.'; return; }
+  if(!(file.type.startsWith('image/')||file.type.startsWith('video/'))){ uploadStatus.textContent='Only images/videos allowed.'; return; }
+  if(file.size>80*1024*1024){ uploadStatus.textContent='File too large (max 80MB).'; return; }
 
   const uploadBtn = document.getElementById('uploadBtn');
-  uploadBtn.disabled = true;
-  uploadStatus.textContent = 'Uploading...';
+  uploadBtn.disabled = true; uploadStatus.textContent='Uploading...';
 
   const fileName = `${currentUser.id}_${Date.now()}_${sanitizeFilename(file.name)}`;
-
-  // upload
   const { data: upData, error: upErr } = await sb.storage.from('media').upload(fileName, file);
-  if(upErr){ uploadStatus.textContent = 'Upload failed: ' + upErr.message; uploadBtn.disabled = false; return; }
+  if(upErr){ uploadStatus.textContent='Upload failed: '+upErr.message; uploadBtn.disabled=false; return; }
 
-  // حاول getPublicUrl أولًا (works if bucket public)
+  // Get public URL
   let publicUrl = null;
-  try {
+  try{
     const { data: urlData } = sb.storage.from('media').getPublicUrl(fileName);
     publicUrl = urlData?.publicUrl ?? null;
-  } catch(e){
-    publicUrl = null;
-  }
+  }catch(e){ publicUrl=null; }
 
-  // إذا bucket خاص، نأخذ signed URL (مدة 24 ساعة)
   if(!publicUrl){
     const { data: signedData, error: signedErr } = await sb.storage.from('media').createSignedUrl(fileName, 60*60*24);
-    if(signedErr){ uploadStatus.textContent = 'Could not get file URL: ' + signedErr.message; uploadBtn.disabled = false; return; }
+    if(signedErr){ uploadStatus.textContent='Could not get file URL'; uploadBtn.disabled=false; return; }
     publicUrl = signedData?.signedUrl ?? null;
   }
 
-  if(!publicUrl){ uploadStatus.textContent = 'Could not obtain file URL.'; uploadBtn.disabled = false; return; }
+  if(!publicUrl){ uploadStatus.textContent='Could not get URL'; uploadBtn.disabled=false; return; }
 
-  // تحديث جدول Users (upsert) ومزامنة account/privacy
   const accountType = document.getElementById('accountType').value;
   const privacy = document.getElementById('privacy').value;
-  await sb.from('Users').upsert({
-    id: currentUser.id,
-    account_type: accountType,
-    privacy: privacy,
-    profile_image: file.type.startsWith('image/') ? publicUrl : null
-  });
+  await sb.from('Users').upsert({id: currentUser.id, account_type:accountType, privacy:privacy, profile_image:file.type.startsWith('image/')?publicUrl:null});
 
-  // إضافة منشور
   const { error: postErr } = await sb.from('Posts').insert([{
     user_id: currentUser.id,
-    content: 'Uploaded via profile',
-    image_url: file.type.startsWith('image/') ? publicUrl : null,
-    video_url: file.type.startsWith('video/') ? publicUrl : null,
-    created_at: new Date()
+    content:'Uploaded via profile',
+    image_url:file.type.startsWith('image/')?publicUrl:null,
+    video_url:file.type.startsWith('video/')?publicUrl:null,
+    created_at:new Date()
   }]);
-  if(postErr){ uploadStatus.textContent = 'DB insert error: ' + postErr.message; uploadBtn.disabled = false; return; }
+  if(postErr){ uploadStatus.textContent='DB insert error: '+postErr.message; uploadBtn.disabled=false; return; }
 
-  uploadStatus.textContent = 'File uploaded successfully!';
-  uploadBtn.disabled = false;
+  uploadStatus.textContent='File uploaded successfully!';
+  uploadBtn.disabled=false;
   await loadPosts();
 }
 
-/* ---------- أدوات مساعدة ---------- */
-function escapeHtml(str){ return String(str).replace(/[&<>"']/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
+// ---------- Helpers ----------
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
 function sanitizeFilename(name){ return name.replace(/[^a-zA-Z0-9._-]/g,'_'); }
 
 </script>
