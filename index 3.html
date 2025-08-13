@@ -23,81 +23,77 @@
   .story, .post { background:white; padding:10px; border-radius:10px; min-width:100px; flex-shrink:0; box-shadow:0 1px 3px rgba(0,0,0,0.1);}
   .story img, .post img { border-radius:50%; width:50px; height:50px; }
   .post img, .post video { border-radius:10px; width:100%; margin-top:5px; }
-  .profile { background:white; padding:10px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.1);}
+  .profile { background:white; padding:10px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
   .btn { padding:5px 10px; border:none; border-radius:5px; cursor:pointer; margin-right:5px; font-weight:bold; background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); color:white;}
   input[type="text"] { width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;}
 </style>
 </head>
 <body>
-  <header>
-    <h1>Laxoria</h1>
-  </header>
+<header>
+  <h1>Laxoria</h1>
+</header>
 
-  <!-- Home Page -->
-  <section id="home" class="active">
-    <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Home</h2>
-    <div class="stories">
-      <div class="story"><img src="https://via.placeholder.com/50"/><p>User1</p></div>
-      <div class="story"><img src="https://via.placeholder.com/50"/><p>User2</p></div>
-      <div class="story"><button class="btn">+</button><p>Add Story</p></div>
-    </div>
-    <div class="feed">
-      <div class="post">
-        <div><img src="https://via.placeholder.com/40"/><strong>User1</strong></div>
-        <p>هذا منشور صورة</p>
-        <img src="https://via.placeholder.com/300"/>
-        <div><button class="btn">❤️ 5</button><button class="btn">💬 Comment</button></div>
-      </div>
-    </div>
-  </section>
+<!-- Home Page -->
+<section id="home" class="active">
+  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Home</h2>
+  <div class="stories" id="stories"></div>
+  <div class="feed" id="feed"></div>
+</section>
 
-  <!-- Messages Page -->
-  <section id="messages">
-    <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Messages</h2>
-    <p>قائمة الرسائل تظهر هنا</p>
-  </section>
+<!-- Messages Page -->
+<section id="messages">
+  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Messages</h2>
+  <div id="messagesList"></div>
+</section>
 
-  <!-- Profile Page -->
-  <section id="profile">
-    <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Profile</h2>
-    <div class="profile">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <img src="https://via.placeholder.com/100" alt="profile"/>
-        <div>
-          <h3>Laxoria User</h3>
-          <p>Privacy: Public</p>
-          <p>Account Type: Personal</p>
-        </div>
-      </div>
-      <div style="margin-top:10px;">
-        <button class="btn">Toggle Privacy</button>
-        <button class="btn">Switch Account Type</button>
-      </div>
-    </div>
-  </section>
+<!-- Profile Page -->
+<section id="profile">
+  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Profile</h2>
+  <div class="profile" id="profileInfo"></div>
+</section>
 
-  <!-- Search Page -->
-  <section id="search">
-    <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Search</h2>
-    <input type="text" placeholder="ابحث عن فيديوهات أو أشخاص..."/>
-  </section>
+<!-- Search Page -->
+<section id="search">
+  <h2 style="background: linear-gradient(to right, #A8E6CF, #C39BD3, #FF6F91); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Search</h2>
+  <input type="text" id="searchInput" placeholder="ابحث عن فيديوهات أو أشخاص..."/>
+</section>
 
-  <!-- Navigation Bar -->
-  <div class="nav">
-    <button onclick="showPage('home')">🏠</button>
-    <button onclick="showPage('messages')">💬</button>
-    <button onclick="showPage('search')">🔍</button>
-    <button onclick="showPage('profile')">👤</button>
-  </div>
+<!-- Navigation Bar -->
+<div class="nav">
+  <button onclick="showPage('home')">🏠</button>
+  <button onclick="showPage('messages')">💬</button>
+  <button onclick="showPage('search')">🔍</button>
+  <button onclick="showPage('profile')">👤</button>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+  const SUPABASE_KEY = 'YOUR_ANON_KEY';
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
   function showPage(pageId){
     const pages = ['home','messages','profile','search'];
-    pages.forEach(id => {
-      document.getElementById(id).classList.remove('active');
-    });
+    pages.forEach(id => document.getElementById(id).classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
   }
+
+  async function loadPosts(){
+    const { data, error } = await supabase.from('Posts').select('*').order('created_at',{ascending:false});
+    if(error){ console.error(error); return; }
+    const feed = document.getElementById('feed');
+    feed.innerHTML = '';
+    data.forEach(post => {
+      const div = document.createElement('div');
+      div.className = 'post';
+      div.innerHTML = `<div><strong>User ${post.user_id}</strong></div><p>${post.content}</p>` + 
+                      (post.image_url ? `<img src="${post.image_url}"/>`:'') +
+                      (post.video_url ? `<video src="${post.video_url}" controls></video>`:'');
+      feed.appendChild(div);
+    });
+  }
+
+  loadPosts();
 </script>
 </body>
 </html>
