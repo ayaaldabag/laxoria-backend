@@ -98,6 +98,119 @@
     pages.forEach(id => document.getElementById(id).classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
   }
+  const SUPABASE_URL = 'https://haeptsutgwyplaaozuev.supabase.co';
+const SUPABASE_KEY = 'YOUR_ANON_KEY'; // ضع هنا مفتاحك الصحيح
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+
+function showPage(pageId){
+  const pages = ['auth','home','messages','profile','search'];
+  pages.forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
+
+// تسجيل مستخدم جديد
+async function register() {
+  const email = document.getElementById('authEmail').value;
+  const password = document.getElementById('authPassword').value;
+  const { data, error } = await supabase.auth.signUp({ email, password });
+  const authStatus = document.getElementById('authStatus');
+  if(error) { authStatus.textContent = error.message; return; }
+  authStatus.textContent = 'Registered! Please login.';
+}
+
+// تسجيل دخول
+async function login() {
+  const email = document.getElementById('authEmail').value;
+  const password = document.getElementById('authPassword').value;
+  const { data: session, error } = await supabase.auth.signInWithPassword({ email, password });
+  const authStatus = document.getElementById('authStatus');
+  if(error) { authStatus.textContent = error.message; return; }
+  currentUser = session.user;
+  authStatus.textContent = 'Logged in!';
+  showPage('home');
+  loadPosts();
+  loadProfile();
+}
+
+// تسجيل خروج
+async function logout() {
+  await supabase.auth.signOut();
+  currentUser = null;
+  showPage('auth');
+}
+
+// تحميل المنشورات
+async function loadPosts(){
+  if(!currentUser) return;
+  const { data, error } = await supabase.from('Posts').select('*').order('created_at',{ascending:false});
+  if(error){ console.error(error); return; }
+  const feed = document.getElementById('feed');
+  feed.innerHTML = '';
+  data.forEach(post => {
+    const div = document.createElement('div');
+    div.className = 'post';
+    div.innerHTML = `<div><strong>User ${post.user_id}</strong></div><p>${post.content}</p>` + 
+                    (post.image_url ? `<img src="${post.image_url}"/>`:'') +
+                    (post.video_url ? `<video src="${post.video_url}" controls></video>`:'');
+    feed.appendChild(div);
+  });
+}
+
+// تحميل بيانات البروفايل
+async function loadProfile(){
+  if(!currentUser) return;
+  const { data, error } = await supabase.from('Users').select('*').eq('id', currentUser.id).single();
+  if(error){ console.error(error); return; }
+  const profileDiv = document.getElementById('profileInfo');
+  profileDiv.innerHTML = `<p>Email: ${currentUser.email}</p>
+                          <p>Account Type: ${data.account_type || 'Personal'}</p>
+                          <p>Privacy: ${data.privacy || 'Public'}</p>`;
+}
+
+// رفع الملفات
+async function uploadFile() {
+  if(!currentUser) { alert('Please login first'); return; }
+
+  const file = document.getElementById('fileInput').files[0];
+  const uploadStatus = document.getElementById('uploadStatus');
+  if (!file) { uploadStatus.textContent = 'Please select a file first.'; return; }
+
+  const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
+
+  const { data, error } = await supabase.storage.from('media').upload(fileName, file);
+  if(error){ uploadStatus.textContent = 'Upload failed: ' + error.message; return; }
+
+  const { publicUrl, error: urlError } = supabase.storage.from('media').getPublicUrl(fileName);
+  if(urlError){ uploadStatus.textContent = 'URL error: ' + urlError.message; return; }
+
+  const accountType = document.getElementById('accountType').value;
+  const privacy = document.getElementById('privacy').value;
+
+  // تحديث Users table
+  await supabase.from('Users').upsert({
+    id: currentUser.id,
+    account_type: accountType,
+    privacy: privacy
+  });
+
+  const { error: postError } = await supabase.from('Posts').insert([
+    {
+      user_id: currentUser.id,
+      content: `Uploaded via profile page`,
+      image_url: file.type.startsWith('image/') ? publicUrl : null,
+      video_url: file.type.startsWith('video/') ? publicUrl : null,
+      created_at: new Date(),
+    }
+  ]);
+
+  if(postError){ uploadStatus.textContent = 'DB insert error: ' + postError.message; return; }
+
+  uploadStatus.textContent = 'File uploaded successfully!';
+  loadPosts();
+}
+
 
   async function loadPosts(){
     const { data, error } = await supabase.from('Posts').select('*').order('created_at',{ascending:false});
