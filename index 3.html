@@ -1,159 +1,552 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Laxoria Social</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Laxoria — Social</title>
+
+<!-- Google font (زين زخرفة بديلة) -->
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-body{margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#fff;color:#333;}
-header{background:#fff;padding:20px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,0.08);}
-header h1{font-family:'Brush Script MT',cursive;font-size:48px;background:linear-gradient(to right,#A8E6CF,#C39BD3,#FF6F91);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;}
-section{padding:18px;margin-bottom:10px;display:none;max-width:900px;margin-left:auto;margin-right:auto;}
-.active{display:block;}
-.nav{position:fixed;bottom:0;left:0;right:0;width:100%;background:white;display:flex;justify-content:space-around;padding:10px 0;box-shadow:0 -2px 6px rgba(0,0,0,0.06);}
-.nav button{background:none;border:none;font-size:24px;cursor:pointer;background:linear-gradient(to right,#A8E6CF,#C39BD3,#FF6F91);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.stories{display:flex;overflow-x:auto;gap:12px;margin-bottom:12px;}
-.story{position:relative;width:70px;height:70px;border-radius:50%;padding:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-background:conic-gradient(#A8E6CF,#C39BD3,#FF6F91,#A8E6CF);}
-.story img{border-radius:50%;width:64px;height:64px;object-fit:cover;}
-.feed .post{background:#fff;padding:12px;border-radius:12px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
-.post img,.post video{border-radius:10px;width:100%;max-height:420px;object-fit:cover;margin-top:8px;}
-.profile-header{display:flex;align-items:center;gap:12px;background:linear-gradient(to right,#A8E6CF,#C39BD3,#FF6F91);padding:12px;border-radius:30px;}
-.profile-header img{width:80px;height:80px;border-radius:50%;border:3px solid #fff;}
-.profile-header .info{color:#fff;}
-.profile-header .info h3{margin:0;font-size:20px;}
-.profile-header .info p{margin:0;font-size:14px;opacity:0.9;}
-.profile-tabs{display:flex;gap:10px;margin-top:12px;overflow-x:auto;}
-.profile-tabs button{flex:1;padding:8px 12px;border:none;border-radius:12px;background:#f0f0f0;cursor:pointer;}
-.profile-tabs button.active{background:linear-gradient(to right,#A8E6CF,#C39BD3,#FF6F91);color:#fff;}
-.tab-content{margin-top:12px;}
-input[type="text"],input[type="email"],input[type="password"],select{width:100%;padding:10px;border-radius:8px;border:1px solid #e0e0e0;margin-bottom:10px;}
-.btn{padding:8px 12px;border:none;border-radius:8px;cursor:pointer;margin-right:6px;font-weight:600;background:linear-gradient(to right,#A8E6CF,#C39BD3,#FF6F91);color:white;}
+:root{
+  --accent1:#A8E6CF; /* سماوي */
+  --accent2:#C39BD3; /* بنفسجي فاتح */
+  --accent3:#FF6F91; /* وردي غامق */
+  --muted:#6b6b6b;
+  --card-bg:#ffffff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter, system-ui, "Segoe UI", Roboto, Arial; background:#fafafa;color:#222; -webkit-font-smoothing:antialiased}
+header{padding:18px;text-align:center;border-bottom:1px solid #f2f2f2;background:#fff}
+header h1{margin:0;font-family:Pacifico, "Brush Script MT", cursive;font-size:44px;
+  background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.container{max-width:1100px;margin:18px auto;padding:0 14px}
+.card{background:var(--card-bg);border-radius:12px;padding:12px;margin-bottom:14px;box-shadow:0 6px 20px rgba(0,0,0,0.04)}
+.row{display:flex;gap:14px}
+.left{flex:2} .right{flex:1}
+input,textarea,select,button{font-family:inherit}
+input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #e7e7e7;margin-top:8px}
+textarea{resize:vertical}
+.btn{display:inline-block;padding:8px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));color:#fff;font-weight:600;cursor:pointer}
+.small{font-size:13px;color:var(--muted)}
+nav.bottom{position:fixed;left:0;right:0;bottom:0;height:64px;background:#fff;display:flex;justify-content:center;align-items:center;border-top:1px solid #eee}
+nav .tabs{display:flex;gap:18px}
+nav .tab{background:none;border:0;font-size:22px;cursor:pointer}
+.stories{display:flex;gap:10px;overflow-x:auto;padding:6px 0}
+.story{width:76px;height:76px;border-radius:50%;padding:4px;background:conic-gradient(var(--accent1),var(--accent2),var(--accent3));display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer}
+.story img{width:68px;height:68px;border-radius:50%;object-fit:cover;border:3px solid #fff}
+.avatar{width:44px;height:44px;border-radius:50%;object-fit:cover}
+.feed .post{margin-bottom:12px}
+.post img,.post video{width:100%;border-radius:10px;margin-top:10px}
+.post .meta{display:flex;gap:12px;align-items:center}
+#messagesList{max-height:420px;overflow-y:auto;padding:8px;background:#fafafa;border-radius:8px}
+.message{padding:8px;border-radius:10px;margin-bottom:6px;max-width:70%}
+.message.self{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;margin-left:auto}
+.message.other{background:#f0f0f0}
+.profile-header{display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));color:#fff}
+.profile-header img{width:96px;height:96px;border-radius:50%;border:3px solid #fff;object-fit:cover}
+.tabs{display:flex;gap:8px;margin-top:10px}
+.tabs button{padding:8px 12px;border-radius:10px;border:0;background:#f4f4f4;cursor:pointer}
+@media(min-width:980px){ .row{align-items:flex-start} }
 </style>
 </head>
 <body>
-<!-- Login Page -->
-<section id="login" class="active">
-<h2 id="loginHeader">Login</h2>
-<input id="email" type="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<div style="display:flex;gap:8px;">
-<button class="btn" onclick="login()">Login</button>
-<button class="btn" onclick="register()">Register</button>
-</div>
-<p id="loginStatus"></p>
-</section>
+<header><h1>Laxoria</h1></header>
 
-<!-- Home Page -->
-<section id="home">
-<h2>Home</h2>
-<div class="stories" id="stories"></div>
-<div class="feed" id="feed"></div>
-</section>
+<div class="container">
 
-<!-- Profile Page -->
-<section id="profile">
-<div class="profile-header">
-<img id="profilePic" src="https://via.placeholder.com/80">
-<div class="info">
-<h3 id="profileName">Username</h3>
-<p id="profileHandle">@handle</p>
-</div>
-</div>
+  <!-- AUTH -->
+  <section id="screen-auth" class="card">
+    <h3>Login / Register</h3>
+    <input id="authEmail" type="email" placeholder="البريد الإلكتروني / Email">
+    <input id="authPassword" type="password" placeholder="كلمة المرور / Password (min 6)">
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn" onclick="doLogin()">Login</button>
+      <button class="btn" onclick="doRegister()">Register</button>
+    </div>
+    <p id="authStatus" class="small"></p>
 
-<div class="profile-tabs">
-<button class="active" onclick="showTab('saved')">Saved</button>
-<button onclick="showTab('videos')">Videos</button>
-<button onclick="showTab('all')">All Posts</button>
-</div>
+    <div style="margin-top:12px" class="small">
+      <p>ملاحظة: يجب تأكيد البريد الإلكتروني (Email confirmation) لكي تتمكن من الوصول للتطبيق — هذا يمنع الحسابات الوهمية.</p>
+      <p>يمكنك أيضاً تفعيل Google / OAuth في Supabase لتمكين تسجيل حسابات حقيقية.</p>
+    </div>
+  </section>
 
-<div class="tab-content" id="tabContent"></div>
-</section>
+  <!-- APP MAIN -->
+  <section id="screen-app" style="display:none">
+    <div class="row">
+      <div class="left">
+        <!-- Create post -->
+        <div class="card">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <img id="meAvatar" class="avatar" src="https://via.placeholder.com/44" alt="avatar">
+            <div style="flex:1">
+              <textarea id="postText" placeholder="شارك قصة أو فكرة... / Share something..." rows="2"></textarea>
+              <input id="postFile" type="file" accept="image/*,video/*">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                <div>
+                  <button class="btn" onclick="createPost()">Post</button>
+                  <button class="btn" onclick="createStory()">Add Story</button>
+                </div>
+                <div class="small">Signed in as <span id="meEmail">-</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-<!-- Nav -->
-<div class="nav">
-<button onclick="showPage('home')">🏠</button>
-<button onclick="showPage('profile')">👤</button>
-</div>
+        <!-- Stories strip -->
+        <div class="card">
+          <div class="stories" id="storiesStrip"></div>
+        </div>
 
+        <!-- Feed -->
+        <div id="feed" class="card feed"></div>
+
+      </div>
+
+      <div class="right">
+        <!-- Search -->
+        <div class="card">
+          <h4>Search</h4>
+          <input id="searchInput" placeholder="ابحث عن منشور أو مستخدم / Search..." oninput="debouncedSearch()">
+          <div id="searchResults" style="margin-top:8px"></div>
+        </div>
+
+        <!-- Messages preview -->
+        <div class="card">
+          <h4>Messages</h4>
+          <div id="recentConvos"></div>
+          <div style="margin-top:8px">
+            <button class="btn" onclick="openMessages()">Open Messages</button>
+          </div>
+        </div>
+
+        <!-- Mini profile -->
+        <div class="card profile-header" style="flex-direction:column;align-items:flex-start">
+          <div style="display:flex;gap:12px;align-items:center">
+            <img id="miniAvatar" src="https://via.placeholder.com/96" style="width:64px;height:64px;border-radius:50%">
+            <div>
+              <div id="miniName" style="font-weight:700">User</div>
+              <div id="miniHandle" class="small">@handle</div>
+            </div>
+          </div>
+          <div style="margin-top:8px">
+            <button class="btn" onclick="goProfile()">Open Profile</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MESSAGES -->
+  <section id="screen-messages" class="card" style="display:none">
+    <h3>Messages</h3>
+    <div id="messagesList"></div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input id="msgTo" placeholder="To user id (optional)">
+      <input id="msgText" placeholder="Write a message...">
+      <button class="btn" onclick="sendMessage()">Send</button>
+    </div>
+    <div style="margin-top:12px"><button class="btn" onclick="backToApp()">Back</button></div>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="screen-profile" class="card" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;gap:12px;align-items:center">
+        <img id="profileAvatar" src="https://via.placeholder.com/96" style="width:96px;height:96px;border-radius:50%">
+        <div>
+          <div id="profileName" style="font-weight:700">User</div>
+          <div id="profileHandleDisplay" class="small">@handle</div>
+        </div>
+      </div>
+      <div>
+        <input id="profilePicFile" type="file" accept="image/*">
+        <button class="btn" onclick="uploadProfilePic()">Upload Pic</button>
+      </div>
+    </div>
+
+    <div class="tabs" style="margin-top:12px">
+      <button class="btn" onclick="profileTab('posts')">Posts</button>
+      <button class="btn" onclick="profileTab('videos')">Videos</button>
+      <button class="btn" onclick="profileTab('saved')">Saved</button>
+    </div>
+
+    <div id="profileContent" style="margin-top:12px"></div>
+    <div style="margin-top:12px"><button class="btn" onclick="backToApp()">Back</button></div>
+  </section>
+
+</div> <!-- container -->
+
+<nav class="bottom">
+  <div class="tabs">
+    <button class="tab" onclick="showScreen('screen-app')">🏠</button>
+    <button class="tab" onclick="showScreen('screen-messages')">💬</button>
+    <button class="tab" onclick="showScreen('screen-profile')">👤</button>
+  </div>
+</nav>
+
+<!-- Supabase client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
 <script>
-const SUPABASE_URL='https://haeptsutgwyplaaozuev.supabase.co';
-const SUPABASE_ANON_KEY='.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhZXB0c3V0Z3d5cGxhYW96dWV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNzAyNTIsImV4cCI6MjA3MDY0NjI1Mn0.7rEfjIGrTqlVhjCByWF4wirCe3X7JEMo6yGCZob7wOU';
-const sb = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+/* ================== CONFIG - ضع مفاتيح مشروعك هنا ================== */
+const SUPABASE_URL = 'https://haeptsutgwyplaaozuev.supabase.co'; // استبدل برابط مشروعك إن اختلف
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhZXB0c3V0Z3d5cGxhYW96dWV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNzAyNTIsImV4cCI6MjA3MDY0NjI1Mn0.7rEfjIGrTqlVhjCByWF4wirCe3X7JEMo6yGCZob7wOU'; // ضع هنا ANON public key الخاص بمشروعك
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let currentUser=null;
+/* ================== STATE ================== */
+let currentUser = null;
+let searchTimer = null;
 
-function showPage(page){
-['login','home','profile'].forEach(id=>document.getElementById(id).classList.remove('active'));
-document.getElementById(page).classList.add('active');
+/* ================== UI helpers ================== */
+function showScreen(id){
+  ['screen-auth','screen-app','screen-messages','screen-profile'].forEach(s => document.getElementById(s).style.display = 'none');
+  document.getElementById(id).style.display = 'block';
 }
+function backToApp(){ showScreen('screen-app'); }
 
-async function login(){
-const email=document.getElementById('email').value.trim();
-const password=document.getElementById('password').value;
-const status=document.getElementById('loginStatus');
-status.textContent='Logging in...';
-const { data,error }=await sb.auth.signInWithPassword({email,password});
-if(error){status.textContent='Error: '+error.message; return;}
-currentUser=data.user;
-status.textContent='Logged in!';
-showPage('home');
-loadStories();
-loadFeed();
-loadProfile();
-}
+/* ================== AUTH ================== */
+async function doRegister(){
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  document.getElementById('authStatus').textContent = 'Registering...';
+  if(!email || !password || password.length < 6){ document.getElementById('authStatus').textContent = 'Enter valid email and password (min 6).'; return; }
 
-async function register(){
-const email=document.getElementById('email').value.trim();
-const password=document.getElementById('password').value;
-const status=document.getElementById('loginStatus');
-status.textContent='Registering...';
-const { data,error }=await sb.auth.signUp({email,password});
-if(error){status.textContent='Error: '+error.message; return;}
-status.textContent='Registered — check email.';
+  // Supabase sign up (email confirmation should be enabled in Dashboard)
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if(error){ document.getElementById('authStatus').textContent = 'Error: ' + error.message; return; }
+  document.getElementById('authStatus').textContent = 'Registered — check your email to confirm. Once confirmed, login.';
+  // create a Users row AFTER confirmation on login to ensure real emails — we'll create user row on login if missing.
 }
 
-// ---------- Stories ----------
-function loadStories(){
-const stories=document.getElementById('stories'); stories.innerHTML='';
-const colors=['#A8E6CF','#FF6F91','#C39BD3'];
-for(let i=1;i<=10;i++){
-const div=document.createElement('div'); div.className='story';
-div.innerHTML=`<img src="https://picsum.photos/64?random=${i}" alt="story">`; stories.appendChild(div);
-}
+async function doLogin(){
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  document.getElementById('authStatus').textContent = 'Logging in...';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if(error){ document.getElementById('authStatus').textContent = 'Error: ' + error.message; return; }
+  // check if email is confirmed (depends on your Supabase settings)
+  currentUser = data.user;
+  // Supabase returns user metadata; some projects include `email_confirmed_at` in user object - check that
+  const isConfirmed = !!(currentUser?.email_confirmed_at || currentUser?.confirmation_sent_at === undefined); // best-effort check
+  // If your Supabase requires confirmation and `currentUser` isn't confirmed, block access:
+  if(!isConfirmed){
+    document.getElementById('authStatus').textContent = 'Please confirm your email before logging in.';
+    // sign out to prevent session
+    await sb.auth.signOut();
+    currentUser = null;
+    return;
+  }
+
+  // create Users row if not exists
+  try{
+    const { data: u } = await sb.from('Users').select('*').eq('id', currentUser.id).single().catch(()=>({data:null}));
+    if(!u) {
+      await sb.from('Users').insert([{ id: currentUser.id, username: currentUser.email.split('@')[0], handle: '@' + currentUser.email.split('@')[0].toLowerCase() }]);
+    }
+  }catch(e){ console.warn('users create check failed', e); }
+
+  // set UI
+  document.getElementById('meEmail').textContent = currentUser.email;
+  document.getElementById('authStatus').textContent = 'Logged in!';
+  showScreen('screen-app');
+  // refresh profile and feed
+  await loadProfileMini();
+  await loadStories();
+  await loadFeed();
+  await loadRecentConvos();
+  subscribeRealtime();
 }
 
-// ---------- Feed ----------
-function loadFeed(){
-const feed=document.getElementById('feed'); feed.innerHTML='';
-for(let i=1;i<=5;i++){
-const div=document.createElement('div'); div.className='post';
-div.innerHTML=`<div><strong>User${i}</strong></div>
-<p>Post content ${i}</p>
-<img src="https://picsum.photos/300/200?random=${i}" />`;
-feed.appendChild(div);
-}
+/* check session on load */
+sb.auth.getSession().then(({ data })=>{
+  currentUser = data?.session?.user ?? null;
+  if(currentUser){
+    document.getElementById('meEmail').textContent = currentUser.email;
+    loadProfileMini();
+    loadStories();
+    loadFeed();
+    loadRecentConvos();
+    subscribeRealtime();
+    showScreen('screen-app');
+  } else {
+    showScreen('screen-auth');
+  }
+});
+sb.auth.onAuthStateChange((event, session) => {
+  currentUser = session?.user ?? null;
+  if(currentUser){
+    document.getElementById('meEmail').textContent = currentUser.email;
+    loadProfileMini();
+    loadStories();
+    loadFeed();
+    loadRecentConvos();
+    subscribeRealtime();
+    showScreen('screen-app');
+  } else {
+    showScreen('screen-auth');
+  }
+});
+
+/* ================== Realtime subscribe ================== */
+function subscribeRealtime(){
+  const ch = sb.channel('laxoria-channel');
+  ch.on('postgres_changes', { event: '*', schema: 'public', table: 'Posts' }, () => loadFeed());
+  ch.on('postgres_changes', { event: '*', schema: 'public', table: 'Likes' }, () => loadFeed());
+  ch.on('postgres_changes', { event: '*', schema: 'public', table: 'Comments' }, () => loadFeed());
+  ch.on('postgres_changes', { event: '*', schema: 'public', table: 'Stories' }, () => loadStories());
+  ch.on('postgres_changes', { event: '*', schema: 'public', table: 'Messages' }, () => {
+    if(document.getElementById('screen-messages').style.display !== 'none') loadMessages();
+    loadRecentConvos();
+  });
+  ch.subscribe();
 }
 
-// ---------- Profile ----------
-function loadProfile(){
-document.getElementById('profilePic').src='https://picsum.photos/80';
-document.getElementById('profileName').textContent='User123';
-document.getElementById('profileHandle').textContent='@user123';
-showTab('saved');
+/* ================== POSTS / STORIES / LIKES / COMMENTS ================== */
+
+/* helper upload to user-files bucket */
+async function uploadToUserFiles(file, subpath='') {
+  if(!file) return null;
+  if(!currentUser) throw new Error('Not authenticated');
+  const ext = file.name.split('.').pop();
+  const path = `user-files/${currentUser.id}/${subpath}${Date.now()}.${ext}`;
+  const { data, error } = await sb.storage.from('user-files').upload(path, file, { upsert: false });
+  if(error) throw error;
+  const { data: urlData } = sb.storage.from('user-files').getPublicUrl(path);
+  return urlData?.publicUrl ?? null;
 }
 
-function showTab(tab){
-document.querySelectorAll('.profile-tabs button').forEach(b=>b.classList.remove('active'));
-document.querySelector(`.profile-tabs button[onclick*="${tab}"]`).classList.add('active');
-const content=document.getElementById('tabContent'); content.innerHTML='';
-for(let i=1;i<=5;i++){
-if(tab==='saved') content.innerHTML+=`<div class="post"><p>Saved Post ${i}</p></div>`;
-else if(tab==='videos') content.innerHTML+=`<div class="post"><video controls src="https://www.w3schools.com/html/mov_bbb.mp4"></video></div>`;
-else content.innerHTML+=`<div class="post"><p>Post ${i}</p></div>`;
+async function createPost(){
+  if(!currentUser) return alert('Please login first');
+  const text = document.getElementById('postText').value.trim();
+  const file = document.getElementById('postFile').files[0];
+  let img=null, vid=null;
+  if(file){
+    try{
+      const pub = await uploadToUserFiles(file);
+      if(file.type.startsWith('image/')) img = pub;
+      else if(file.type.startsWith('video/')) vid = pub;
+    }catch(e){ alert('Upload failed: ' + e.message); return; }
+  }
+  await sb.from('Posts').insert([{ user_id: currentUser.id, content: text || null, image_url: img, video_url: vid, created_at: new Date() }]);
+  document.getElementById('postText').value=''; document.getElementById('postFile').value='';
+  loadFeed();
 }
+
+async function createStory(){
+  if(!currentUser) return alert('Please login first');
+  const file = document.getElementById('postFile').files[0];
+  if(!file) return alert('Choose file to add as story (use the post file input)');
+  try{
+    const pub = await uploadToUserFiles(file, 'stories/');
+    await sb.from('Stories').insert([{ user_id: currentUser.id, image_url: pub, created_at: new Date() }]);
+    document.getElementById('postFile').value='';
+    loadStories();
+  }catch(e){ alert('Story upload failed: ' + e.message); }
 }
+
+/* load stories */
+async function loadStories(){
+  const el = document.getElementById('storiesStrip');
+  el.innerHTML = '<div class="small">Loading stories...</div>';
+  const { data, error } = await sb.from('Stories').select('*, users:Users(username)').order('created_at',{ascending:false}).limit(50);
+  if(error){ el.innerHTML = '<div class="small">Stories failed</div>'; console.error(error); return; }
+  el.innerHTML = '';
+  for(const s of data){
+    const d = document.createElement('div'); d.className='story';
+    d.innerHTML = `<img src="${s.image_url}" alt="story" title="${s.users?.username || 'User'}" onclick="window.open('${s.image_url}','_blank')">`;
+    el.appendChild(d);
+  }
+}
+
+/* load feed */
+async function loadFeed(){
+  const el = document.getElementById('feed');
+  el.innerHTML = '<div class="small">Loading feed...</div>';
+  const { data, error } = await sb.from('Posts').select('*, users:Users(username,profile_image)').order('created_at',{ascending:false}).limit(200);
+  if(error){ el.innerHTML='<div class="small">Could not load feed</div>'; console.error(error); return; }
+  el.innerHTML = '';
+  for(const p of data){
+    const post = document.createElement('div'); post.className='post card';
+    const name = p.users?.username || 'User';
+    const avatar = p.users?.profile_image || 'https://via.placeholder.com/44';
+    const created = new Date(p.created_at).toLocaleString();
+    post.innerHTML = `
+      <div class="meta"><img class="avatar" src="${avatar}"><div style="margin-left:8px"><strong>${escapeHtml(name)}</strong><div class="small">${escapeHtml(created)}</div></div></div>
+      <div style="margin-top:8px">${escapeHtml(p.content || '')}</div>
+      ${p.image_url?`<img src="${p.image_url}">`:''}
+      ${p.video_url?`<video src="${p.video_url}" controls></video>`:''}
+      <div style="margin-top:8px" class="small">
+        <button class="btn" onclick="toggleLike('${p.id}')">👍 <span id="likes-${p.id}">...</span></button>
+        <button class="btn" onclick="openCommentsUI('${p.id}')">💬 Comments</button>
+        <button class="btn" onclick="repost('${p.id}')">🔁 Repost</button>
+        <button class="btn" onclick="shareAsStory('${p.id}')">📤 Story</button>
+      </div>
+      <div id="comments-container-${p.id}" style="margin-top:8px"></div>
+    `;
+    el.appendChild(post);
+    loadLikesCount(p.id);
+    loadCommentsPreview(p.id, document.getElementById(`comments-container-${p.id}`));
+  }
+}
+
+/* likes */
+async function loadLikesCount(postId){
+  const { data, error } = await sb.from('Likes').select('*', { count: 'exact' }).eq('post_id', postId);
+  const el = document.getElementById(`likes-${postId}`);
+  el.textContent = (data?.length ?? 0);
+}
+async function toggleLike(postId){
+  if(!currentUser) return alert('Please login first');
+  const { data: existing } = await sb.from('Likes').select('*').eq('post_id', postId).eq('user_id', currentUser.id).limit(1);
+  if(existing && existing.length){
+    await sb.from('Likes').delete().eq('post_id', postId).eq('user_id', currentUser.id);
+  } else {
+    await sb.from('Likes').insert([{ post_id: postId, user_id: currentUser.id, created_at: new Date() }]);
+  }
+  loadLikesCount(postId);
+}
+
+/* comments */
+async function openCommentsUI(postId){
+  const container = document.getElementById(`comments-container-${postId}`);
+  if(!container) return;
+  container.innerHTML = `
+    <div><input id="comment-input-${postId}" placeholder="Write a comment..."><button class="btn" onclick="addComment('${postId}')">Comment</button></div>
+    <div id="comment-list-${postId}" style="margin-top:8px"></div>
+  `;
+  loadCommentsForPost(postId, document.getElementById(`comment-list-${postId}`));
+}
+
+async function addComment(postId){
+  const v = document.getElementById(`comment-input-${postId}`).value.trim();
+  if(!v || !currentUser) return;
+  await sb.from('Comments').insert([{ post_id: postId, user_id: currentUser.id, content: v, created_at: new Date() }]);
+  document.getElementById(`comment-input-${postId}`).value='';
+  loadCommentsForPost(postId, document.getElementById(`comment-list-${postId}`));
+}
+
+async function loadCommentsForPost(postId, containerEl){
+  const { data, error } = await sb.from('Comments').select('*, users:Users(username)').eq('post_id', postId).order('created_at',{ascending:true});
+  if(error){ console.error(error); return; }
+  containerEl.innerHTML = data.map(c => `<div class="small"><strong>${escapeHtml(c.users?.username||'User')}</strong>: ${escapeHtml(c.content)}</div>`).join('');
+}
+
+async function loadCommentsPreview(postId, containerEl){
+  const { data, error } = await sb.from('Comments').select('*, users:Users(username)').eq('post_id', postId).order('created_at',{ascending:false}).limit(2);
+  if(containerEl) containerEl.innerHTML = data.map(c => `<div class="small"><strong>${escapeHtml(c.users?.username||'User')}</strong>: ${escapeHtml(c.content)}</div>`).join('') + `<div style="margin-top:6px"><button class="btn small" onclick="openCommentsUI('${postId}')">View all</button></div>`;
+}
+
+/* repost / share as story */
+async function repost(postId){
+  const { data } = await sb.from('Posts').select('*').eq('id', postId).single();
+  if(!data) return;
+  await sb.from('Posts').insert([{ user_id: currentUser.id, content: `Repost: ${data.content || ''}`, image_url: data.image_url, video_url: data.video_url, created_at: new Date() }]);
+  alert('Reposted!');
+}
+async function shareAsStory(postId){
+  const { data } = await sb.from('Posts').select('*').eq('id', postId).single();
+  if(!data) return;
+  const media = data.image_url || data.video_url;
+  if(!media) return alert('No media to share as story');
+  await sb.from('Stories').insert([{ user_id: currentUser.id, image_url: media, created_at: new Date() }]);
+  alert('Shared as story!');
+}
+
+/* ================== MESSAGES (realtime) ================== */
+async function loadRecentConvos(){
+  const el = document.getElementById('recentConvos'); el.innerHTML='';
+  const { data } = await sb.from('Messages').select('*').order('created_at',{ascending:false}).limit(20);
+  const seen = new Set();
+  data.forEach(m=>{
+    if(seen.has(m.from_user_id)) return;
+    seen.add(m.from_user_id);
+    const div = document.createElement('div'); div.className='small'; div.innerHTML = `<strong>${escapeHtml(m.from_user_id)}</strong>: ${escapeHtml(m.content)}`;
+    el.appendChild(div);
+  });
+}
+
+async function openMessages(){ showScreen('screen-messages'); loadMessages(); }
+async function loadMessages(){
+  const list = document.getElementById('messagesList'); list.innerHTML='';
+  const { data } = await sb.from('Messages').select('*').order('created_at',{ascending:true}).limit(500);
+  data.forEach(m=>{
+    const div = document.createElement('div'); div.className = 'message ' + (m.from_user_id === currentUser.id ? 'self' : 'other');
+    div.innerHTML = `<div class="small"><strong>${m.from_user_id === currentUser.id ? 'Me' : escapeHtml(m.from_user_id)}</strong></div><div>${escapeHtml(m.content)}</div>`;
+    list.appendChild(div);
+  });
+  list.scrollTop = list.scrollHeight;
+}
+async function sendMessage(){
+  const to = document.getElementById('msgTo').value.trim() || null;
+  const content = document.getElementById('msgText').value.trim();
+  if(!content || !currentUser) return;
+  await sb.from('Messages').insert([{ from_user_id: currentUser.id, to_user_id: to, content, created_at: new Date() }]);
+  document.getElementById('msgText').value='';
+  loadMessages();
+}
+
+/* ================== PROFILE ================== */
+async function loadProfileMini(){
+  if(!currentUser) return;
+  const { data } = await sb.from('Users').select('*').eq('id', currentUser.id).single().catch(()=>({data:null}));
+  const row = data ?? {};
+  document.getElementById('meAvatar').src = row.profile_image || 'https://via.placeholder.com/44';
+  document.getElementById('miniAvatar').src = row.profile_image || 'https://via.placeholder.com/96';
+  document.getElementById('miniName').textContent = row.username || currentUser.email.split('@')[0];
+  document.getElementById('miniHandle').textContent = row.handle || ('@' + (row.username || currentUser.email.split('@')[0]).toLowerCase());
+}
+
+async function goProfile(){ showScreen('screen-profile'); const { data } = await sb.from('Users').select('*').eq('id', currentUser.id).single().catch(()=>({data:null})); const row = data ?? {}; document.getElementById('profileAvatar').src = row.profile_image || 'https://via.placeholder.com/96'; document.getElementById('profileName').textContent = row.username || currentUser.email.split('@')[0]; document.getElementById('profileHandleDisplay').textContent = row.handle || ('@' + (row.username || currentUser.email.split('@')[0]).toLowerCase()); profileTab('posts'); }
+async function profileTab(tab){
+  const el = document.getElementById('profileContent'); el.innerHTML='';
+  if(tab === 'posts'){
+    const { data } = await sb.from('Posts').select('*').eq('user_id', currentUser.id).order('created_at',{ascending:false});
+    data.forEach(p => el.innerHTML += `<div class="card small">${escapeHtml(p.content||'')}${p.image_url?`<img src="${p.image_url}" style="width:100%;margin-top:6px">`:''}</div>`);
+  } else if(tab === 'videos'){
+    const { data } = await sb.from('Posts').select('*').eq('user_id', currentUser.id).is('video_url', null);
+    // show all posts that have video_url
+    el.innerHTML = '<div class="small">Videos (implement filtering)</div>';
+  } else {
+    el.innerHTML = '<div class="small">Saved (implement save feature to populate)</div>';
+  }
+}
+
+/* profile pic upload */
+async function uploadProfilePic(){
+  const f = document.getElementById('profilePicFile').files[0];
+  if(!f) return alert('Choose an image');
+  const path = `user-files/${currentUser.id}/profile_${Date.now()}.${f.name.split('.').pop()}`;
+  const { data:up, error:upErr } = await sb.storage.from('user-files').upload(path, f, { upsert: true });
+  if(upErr){ alert('Upload error: '+upErr.message); return; }
+  const { data: urlData } = sb.storage.from('user-files').getPublicUrl(path);
+  const publicUrl = urlData.publicUrl;
+  await sb.from('Users').upsert([{ id: currentUser.id, profile_image: publicUrl }]);
+  document.getElementById('profileAvatar').src = publicUrl;
+  document.getElementById('miniAvatar').src = publicUrl;
+  document.getElementById('meAvatar').src = publicUrl;
+}
+
+/* ================== SEARCH (debounced) ================== */
+function debouncedSearch(){
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(async ()=>{
+    const q = document.getElementById('searchInput').value.trim();
+    const sr = document.getElementById('searchResults'); sr.innerHTML='';
+    if(!q) return;
+    const { data: posts } = await sb.from('Posts').select('*, users:Users(username)').ilike('content', `%${q}%`).limit(10);
+    posts.forEach(p => { const d = document.createElement('div'); d.className='small card'; d.innerHTML = `<strong>${escapeHtml(p.users?.username||'User')}</strong>: ${escapeHtml(p.content||'')}`; sr.appendChild(d); });
+    const { data: users } = await sb.from('Users').select('*').ilike('username', `%${q}%`).limit(10);
+    users.forEach(u => { const d = document.createElement('div'); d.className='small card'; d.innerHTML = `<strong>${escapeHtml(u.username)}</strong> <div class="small">${escapeHtml(u.handle||'')}</div>`; sr.appendChild(d); });
+  }, 300);
+}
+
+/* ================== UTIL ================== */
+function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 </script>
 </body>
