@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Laxoria — Social</title>
 
-<!-- Google font (زين زخرفة بديلة) -->
+<!-- زخرفة الخط المطلوب (بديل عملي عبر Google Fonts) -->
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -14,26 +14,29 @@
   --accent2:#C39BD3; /* بنفسجي فاتح */
   --accent3:#FF6F91; /* وردي غامق */
   --muted:#6b6b6b;
-  --card-bg:#ffffff;
+  --bg:#ffffff;
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter, system-ui, "Segoe UI", Roboto, Arial; background:#fafafa;color:#222; -webkit-font-smoothing:antialiased}
-header{padding:18px;text-align:center;border-bottom:1px solid #f2f2f2;background:#fff}
-header h1{margin:0;font-family:Pacifico, "Brush Script MT", cursive;font-size:44px;
+body{margin:0;font-family:Inter, system-ui, "Segoe UI", Roboto, Arial; background:#fafafa;color:#111;-webkit-font-smoothing:antialiased}
+header{padding:18px;text-align:center;border-bottom:1px solid #f2f2f2;background:#fff;position:sticky;top:0;z-index:30}
+header h1{margin:0;font-family:Pacifico, "Brush Script MT", cursive;font-size:40px;
   background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .container{max-width:1100px;margin:18px auto;padding:0 14px}
-.card{background:var(--card-bg);border-radius:12px;padding:12px;margin-bottom:14px;box-shadow:0 6px 20px rgba(0,0,0,0.04)}
+.card{background:var(--bg);border-radius:12px;padding:12px;margin-bottom:14px;box-shadow:0 6px 18px rgba(0,0,0,0.04)}
 .row{display:flex;gap:14px}
 .left{flex:2} .right{flex:1}
 input,textarea,select,button{font-family:inherit}
-input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #e7e7e7;margin-top:8px}
+input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #e7e7e7;margin-top:8px;background:#fff}
 textarea{resize:vertical}
 .btn{display:inline-block;padding:8px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));color:#fff;font-weight:600;cursor:pointer}
 .small{font-size:13px;color:var(--muted)}
-nav.bottom{position:fixed;left:0;right:0;bottom:0;height:64px;background:#fff;display:flex;justify-content:center;align-items:center;border-top:1px solid #eee}
-nav .tabs{display:flex;gap:18px}
-nav .tab{background:none;border:0;font-size:22px;cursor:pointer}
+/* bottom nav */
+nav.bottom{position:fixed;left:0;right:0;bottom:0;height:68px;background:#fff;display:flex;justify-content:center;align-items:center;border-top:1px solid #eee;z-index:40}
+nav .tabs{display:flex;gap:18px;width:100%;max-width:500px;justify-content:space-around;padding:0 12px}
+nav button.tab{background:#fff;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;color:#6b6b6b}
+nav button.tab .dot{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));color:#fff}
+/* stories */
 .stories{display:flex;gap:10px;overflow-x:auto;padding:6px 0}
 .story{width:76px;height:76px;border-radius:50%;padding:4px;background:conic-gradient(var(--accent1),var(--accent2),var(--accent3));display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer}
 .story img{width:68px;height:68px;border-radius:50%;object-fit:cover;border:3px solid #fff}
@@ -58,33 +61,32 @@ nav .tab{background:none;border:0;font-size:22px;cursor:pointer}
 <div class="container">
 
   <!-- AUTH -->
-  <section id="screen-auth" class="card">
+  <section id="screen-auth" class="card" aria-live="polite">
     <h3>Login / Register</h3>
-    <input id="authEmail" type="email" placeholder="البريد الإلكتروني / Email">
-    <input id="authPassword" type="password" placeholder="كلمة المرور / Password (min 6)">
+    <input id="authEmail" type="email" placeholder="البريد الإلكتروني / Email" />
+    <input id="authPassword" type="password" placeholder="كلمة المرور / Password (min 6)" />
     <div style="display:flex;gap:8px;margin-top:8px">
       <button class="btn" onclick="doLogin()">Login</button>
       <button class="btn" onclick="doRegister()">Register</button>
     </div>
     <p id="authStatus" class="small"></p>
-
     <div style="margin-top:12px" class="small">
-      <p>ملاحظة: يجب تأكيد البريد الإلكتروني (Email confirmation) لكي تتمكن من الوصول للتطبيق — هذا يمنع الحسابات الوهمية.</p>
-      <p>يمكنك أيضاً تفعيل Google / OAuth في Supabase لتمكين تسجيل حسابات حقيقية.</p>
+      <p>ملاحظة: يجب تأكيد البريد الإلكتروني (Email confirmation) لكي تتمكن من الوصول للتطبيق — هذا يقلل الحسابات الوهمية.</p>
     </div>
   </section>
 
-  <!-- APP MAIN -->
+  <!-- APP -->
   <section id="screen-app" style="display:none">
     <div class="row">
       <div class="left">
-        <!-- Create post -->
+
+        <!-- create post -->
         <div class="card">
           <div style="display:flex;gap:12px;align-items:flex-start">
             <img id="meAvatar" class="avatar" src="https://via.placeholder.com/44" alt="avatar">
             <div style="flex:1">
               <textarea id="postText" placeholder="شارك قصة أو فكرة... / Share something..." rows="2"></textarea>
-              <input id="postFile" type="file" accept="image/*,video/*">
+              <input id="postFile" type="file" accept="image/*,video/*" />
               <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
                 <div>
                   <button class="btn" onclick="createPost()">Post</button>
@@ -96,25 +98,25 @@ nav .tab{background:none;border:0;font-size:22px;cursor:pointer}
           </div>
         </div>
 
-        <!-- Stories strip -->
+        <!-- stories strip -->
         <div class="card">
           <div class="stories" id="storiesStrip"></div>
         </div>
 
-        <!-- Feed -->
+        <!-- feed -->
         <div id="feed" class="card feed"></div>
 
       </div>
 
       <div class="right">
-        <!-- Search -->
+        <!-- search -->
         <div class="card">
           <h4>Search</h4>
-          <input id="searchInput" placeholder="ابحث عن منشور أو مستخدم / Search..." oninput="debouncedSearch()">
+          <input id="searchInput" placeholder="ابحث عن منشور أو مستخدم / Search..." oninput="debouncedSearch()" />
           <div id="searchResults" style="margin-top:8px"></div>
         </div>
 
-        <!-- Messages preview -->
+        <!-- messages preview -->
         <div class="card">
           <h4>Messages</h4>
           <div id="recentConvos"></div>
@@ -123,10 +125,10 @@ nav .tab{background:none;border:0;font-size:22px;cursor:pointer}
           </div>
         </div>
 
-        <!-- Mini profile -->
+        <!-- mini profile -->
         <div class="card profile-header" style="flex-direction:column;align-items:flex-start">
           <div style="display:flex;gap:12px;align-items:center">
-            <img id="miniAvatar" src="https://via.placeholder.com/96" style="width:64px;height:64px;border-radius:50%">
+            <img id="miniAvatar" src="https://via.placeholder.com/96" style="width:64px;height:64px;border-radius:50%" />
             <div>
               <div id="miniName" style="font-weight:700">User</div>
               <div id="miniHandle" class="small">@handle</div>
@@ -141,37 +143,37 @@ nav .tab{background:none;border:0;font-size:22px;cursor:pointer}
     </div>
   </section>
 
-  <!-- MESSAGES -->
+  <!-- messages full -->
   <section id="screen-messages" class="card" style="display:none">
     <h3>Messages</h3>
     <div id="messagesList"></div>
     <div style="display:flex;gap:8px;margin-top:8px">
-      <input id="msgTo" placeholder="To user id (optional)">
-      <input id="msgText" placeholder="Write a message...">
+      <input id="msgTo" placeholder="To user id (optional)" />
+      <input id="msgText" placeholder="Write a message..." />
       <button class="btn" onclick="sendMessage()">Send</button>
     </div>
     <div style="margin-top:12px"><button class="btn" onclick="backToApp()">Back</button></div>
   </section>
 
-  <!-- PROFILE -->
+  <!-- profile -->
   <section id="screen-profile" class="card" style="display:none">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <div style="display:flex;gap:12px;align-items:center">
-        <img id="profileAvatar" src="https://via.placeholder.com/96" style="width:96px;height:96px;border-radius:50%">
+        <img id="profileAvatar" src="https://via.placeholder.com/96" style="width:96px;height:96px;border-radius:50%" />
         <div>
           <div id="profileName" style="font-weight:700">User</div>
           <div id="profileHandleDisplay" class="small">@handle</div>
         </div>
       </div>
       <div>
-        <input id="profilePicFile" type="file" accept="image/*">
+        <input id="profilePicFile" type="file" accept="image/*" />
         <button class="btn" onclick="uploadProfilePic()">Upload Pic</button>
       </div>
     </div>
 
     <div class="tabs" style="margin-top:12px">
       <button class="btn" onclick="profileTab('posts')">Posts</button>
-      <button class="btn" onclick="profileTab('videos')">Videos</button>
+      <button class="btn" onclick="profileTab('stories')">Stories</button>
       <button class="btn" onclick="profileTab('saved')">Saved</button>
     </div>
 
@@ -179,82 +181,115 @@ nav .tab{background:none;border:0;font-size:22px;cursor:pointer}
     <div style="margin-top:12px"><button class="btn" onclick="backToApp()">Back</button></div>
   </section>
 
-</div> <!-- container -->
+</div>
 
-<nav class="bottom">
+<!-- bottom nav -->
+<nav class="bottom" role="navigation" aria-label="Main">
   <div class="tabs">
-    <button class="tab" onclick="showScreen('screen-app')">🏠</button>
-    <button class="tab" onclick="showScreen('screen-messages')">💬</button>
-    <button class="tab" onclick="showScreen('screen-profile')">👤</button>
+    <button class="tab" onclick="showScreen('screen-app')" title="Home">
+      <div class="dot">🏠</div>
+      <div class="small">Home</div>
+    </button>
+    <button class="tab" onclick="document.getElementById('searchInput').focus()" title="Search">
+      <div class="dot">🔍</div>
+      <div class="small">Search</div>
+    </button>
+    <button class="tab" onclick="openMessages()" title="Messages">
+      <div class="dot">💬</div>
+      <div class="small">Messages</div>
+    </button>
+    <button class="tab" onclick="showScreen('screen-profile')" title="Profile">
+      <div class="dot">👤</div>
+      <div class="small">Profile</div>
+    </button>
   </div>
 </nav>
 
-<!-- Supabase client -->
+<!-- supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
 <script>
-/* ================== CONFIG - ضع مفاتيح مشروعك هنا ================== */
-const SUPABASE_URL = 'https://haeptsutgwyplaaozuev.supabase.co'; // استبدل برابط مشروعك إن اختلف
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhZXB0c3V0Z3d5cGxhYW96dWV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNzAyNTIsImV4cCI6MjA3MDY0NjI1Mn0.7rEfjIGrTqlVhjCByWF4wirCe3X7JEMo6yGCZob7wOU'; // ضع هنا ANON public key الخاص بمشروعك
+/* ========== CONFIG - ضع مفاتيحك هنا ========== 
+   استبدل القيمتين باللي في مشروع Supabase
+*/
+const SUPABASE_URL = 'https://haeptsutgwyplaaozuev.supabase.co'; // مثال: https://xxxx.supabase.co
+const SUPABASE_ANON_KEY = 'REPLACE_WITH_YOUR_ANON_KEY'; // ANON PUBLIC KEY
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ================== STATE ================== */
+/* ========== State ========== */
 let currentUser = null;
 let searchTimer = null;
 
-/* ================== UI helpers ================== */
+/* ========== UI helpers ========== */
 function showScreen(id){
-  ['screen-auth','screen-app','screen-messages','screen-profile'].forEach(s => document.getElementById(s).style.display = 'none');
-  document.getElementById(id).style.display = 'block';
+  // hide all screens
+  ['screen-auth','screen-app','screen-messages','screen-profile'].forEach(s => {
+    const el = document.getElementById(s);
+    if(el) el.style.display = 'none';
+  });
+  const t = document.getElementById(id);
+  if(t) t.style.display = 'block';
 }
 function backToApp(){ showScreen('screen-app'); }
+function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-/* ================== AUTH ================== */
+/* ========== Auth ========== */
 async function doRegister(){
   const email = document.getElementById('authEmail').value.trim();
   const password = document.getElementById('authPassword').value;
-  document.getElementById('authStatus').textContent = 'Registering...';
-  if(!email || !password || password.length < 6){ document.getElementById('authStatus').textContent = 'Enter valid email and password (min 6).'; return; }
-
-  // Supabase sign up (email confirmation should be enabled in Dashboard)
+  const out = document.getElementById('authStatus');
+  out.textContent = 'Registering...';
+  if(!email || !password || password.length < 6){ out.textContent = 'Enter valid email and password (min 6).'; return; }
   const { data, error } = await sb.auth.signUp({ email, password });
-  if(error){ document.getElementById('authStatus').textContent = 'Error: ' + error.message; return; }
-  document.getElementById('authStatus').textContent = 'Registered — check your email to confirm. Once confirmed, login.';
-  // create a Users row AFTER confirmation on login to ensure real emails — we'll create user row on login if missing.
+  if(error){ out.textContent = 'Error: ' + error.message; return; }
+  out.textContent = 'Registered — check your email to confirm. After confirmation, login.';
 }
 
 async function doLogin(){
   const email = document.getElementById('authEmail').value.trim();
   const password = document.getElementById('authPassword').value;
-  document.getElementById('authStatus').textContent = 'Logging in...';
+  const out = document.getElementById('authStatus');
+  out.textContent = 'Logging in...';
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  if(error){ document.getElementById('authStatus').textContent = 'Error: ' + error.message; return; }
-  // check if email is confirmed (depends on your Supabase settings)
+  if(error){ out.textContent = 'Error: ' + error.message; return; }
   currentUser = data.user;
-  // Supabase returns user metadata; some projects include `email_confirmed_at` in user object - check that
-  const isConfirmed = !!(currentUser?.email_confirmed_at || currentUser?.confirmation_sent_at === undefined); // best-effort check
-  // If your Supabase requires confirmation and `currentUser` isn't confirmed, block access:
+  // Check email confirmed (best-effort)
+  const isConfirmed = !!(currentUser?.email_confirmed_at);
   if(!isConfirmed){
-    document.getElementById('authStatus').textContent = 'Please confirm your email before logging in.';
-    // sign out to prevent session
+    out.textContent = 'Please confirm your email before logging in.';
     await sb.auth.signOut();
     currentUser = null;
     return;
   }
+  out.textContent = 'Logged in!';
+  await onSignedIn();
+}
 
-  // create Users row if not exists
+/* check session on load */
+sb.auth.getSession().then(({ data })=>{
+  currentUser = data?.session?.user ?? null;
+  if(currentUser) onSignedIn();
+});
+sb.auth.onAuthStateChange((event, session)=>{
+  currentUser = session?.user ?? null;
+  if(currentUser) onSignedIn();
+});
+
+/* ========== After sign in ========== */
+async function onSignedIn(){
+  if(!currentUser) return;
+  // show app screen
+  document.getElementById('meEmail').textContent = currentUser.email;
+  showScreen('screen-app');
+
+  // ensure Users row exists
   try{
-    const { data: u } = await sb.from('Users').select('*').eq('id', currentUser.id).single().catch(()=>({data:null}));
-    if(!u) {
+    const { data: existing } = await sb.from('Users').select('*').eq('id', currentUser.id).single().catch(()=>({data:null}));
+    if(!existing) {
       await sb.from('Users').insert([{ id: currentUser.id, username: currentUser.email.split('@')[0], handle: '@' + currentUser.email.split('@')[0].toLowerCase() }]);
     }
-  }catch(e){ console.warn('users create check failed', e); }
+  }catch(e){ console.warn(e); }
 
-  // set UI
-  document.getElementById('meEmail').textContent = currentUser.email;
-  document.getElementById('authStatus').textContent = 'Logged in!';
-  showScreen('screen-app');
-  // refresh profile and feed
+  // load UI
   await loadProfileMini();
   await loadStories();
   await loadFeed();
@@ -262,37 +297,7 @@ async function doLogin(){
   subscribeRealtime();
 }
 
-/* check session on load */
-sb.auth.getSession().then(({ data })=>{
-  currentUser = data?.session?.user ?? null;
-  if(currentUser){
-    document.getElementById('meEmail').textContent = currentUser.email;
-    loadProfileMini();
-    loadStories();
-    loadFeed();
-    loadRecentConvos();
-    subscribeRealtime();
-    showScreen('screen-app');
-  } else {
-    showScreen('screen-auth');
-  }
-});
-sb.auth.onAuthStateChange((event, session) => {
-  currentUser = session?.user ?? null;
-  if(currentUser){
-    document.getElementById('meEmail').textContent = currentUser.email;
-    loadProfileMini();
-    loadStories();
-    loadFeed();
-    loadRecentConvos();
-    subscribeRealtime();
-    showScreen('screen-app');
-  } else {
-    showScreen('screen-auth');
-  }
-});
-
-/* ================== Realtime subscribe ================== */
+/* ========== Realtime subscribe ========== */
 function subscribeRealtime(){
   const ch = sb.channel('laxoria-channel');
   ch.on('postgres_changes', { event: '*', schema: 'public', table: 'Posts' }, () => loadFeed());
@@ -306,10 +311,8 @@ function subscribeRealtime(){
   ch.subscribe();
 }
 
-/* ================== POSTS / STORIES / LIKES / COMMENTS ================== */
-
-/* helper upload to user-files bucket */
-async function uploadToUserFiles(file, subpath='') {
+/* ========== Posts / Stories / Likes / Comments ========== */
+async function uploadToBucket(file, subpath=''){
   if(!file) return null;
   if(!currentUser) throw new Error('Not authenticated');
   const ext = file.name.split('.').pop();
@@ -321,55 +324,51 @@ async function uploadToUserFiles(file, subpath='') {
 }
 
 async function createPost(){
-  if(!currentUser) return alert('Please login first');
+  if(!currentUser) return alert('Login first');
   const text = document.getElementById('postText').value.trim();
   const file = document.getElementById('postFile').files[0];
-  let img=null, vid=null;
+  let image_url = null, video_url = null;
   if(file){
     try{
-      const pub = await uploadToUserFiles(file);
-      if(file.type.startsWith('image/')) img = pub;
-      else if(file.type.startsWith('video/')) vid = pub;
+      const pub = await uploadToBucket(file);
+      if(file.type.startsWith('image/')) image_url = pub;
+      else if(file.type.startsWith('video/')) video_url = pub;
     }catch(e){ alert('Upload failed: ' + e.message); return; }
   }
-  await sb.from('Posts').insert([{ user_id: currentUser.id, content: text || null, image_url: img, video_url: vid, created_at: new Date() }]);
+  await sb.from('Posts').insert([{ user_id: currentUser.id, content: text || null, image_url, video_url, created_at: new Date() }]);
   document.getElementById('postText').value=''; document.getElementById('postFile').value='';
   loadFeed();
 }
 
 async function createStory(){
-  if(!currentUser) return alert('Please login first');
+  if(!currentUser) return alert('Login first');
   const file = document.getElementById('postFile').files[0];
-  if(!file) return alert('Choose file to add as story (use the post file input)');
+  if(!file) return alert('Choose file for story (use post file input)');
   try{
-    const pub = await uploadToUserFiles(file, 'stories/');
+    const pub = await uploadToBucket(file, 'stories/');
     await sb.from('Stories').insert([{ user_id: currentUser.id, image_url: pub, created_at: new Date() }]);
     document.getElementById('postFile').value='';
     loadStories();
   }catch(e){ alert('Story upload failed: ' + e.message); }
 }
 
-/* load stories */
 async function loadStories(){
-  const el = document.getElementById('storiesStrip');
-  el.innerHTML = '<div class="small">Loading stories...</div>';
+  const el = document.getElementById('storiesStrip'); el.innerHTML = '<div class="small">Loading stories...</div>';
   const { data, error } = await sb.from('Stories').select('*, users:Users(username)').order('created_at',{ascending:false}).limit(50);
   if(error){ el.innerHTML = '<div class="small">Stories failed</div>'; console.error(error); return; }
   el.innerHTML = '';
-  for(const s of data){
-    const d = document.createElement('div'); d.className='story';
-    d.innerHTML = `<img src="${s.image_url}" alt="story" title="${s.users?.username || 'User'}" onclick="window.open('${s.image_url}','_blank')">`;
-    el.appendChild(d);
-  }
+  data.forEach(s=>{
+    const elDiv = document.createElement('div'); elDiv.className='story';
+    elDiv.innerHTML = `<img src="${s.image_url}" alt="story" title="${escapeHtml(s.users?.username||'User')}" onclick="window.open('${s.image_url}','_blank')">`;
+    el.appendChild(elDiv);
+  });
 }
 
-/* load feed */
 async function loadFeed(){
-  const el = document.getElementById('feed');
-  el.innerHTML = '<div class="small">Loading feed...</div>';
+  const el = document.getElementById('feed'); el.innerHTML = '<div class="small">Loading feed...</div>';
   const { data, error } = await sb.from('Posts').select('*, users:Users(username,profile_image)').order('created_at',{ascending:false}).limit(200);
   if(error){ el.innerHTML='<div class="small">Could not load feed</div>'; console.error(error); return; }
-  el.innerHTML = '';
+  el.innerHTML='';
   for(const p of data){
     const post = document.createElement('div'); post.className='post card';
     const name = p.users?.username || 'User';
@@ -396,12 +395,12 @@ async function loadFeed(){
 
 /* likes */
 async function loadLikesCount(postId){
-  const { data, error } = await sb.from('Likes').select('*', { count: 'exact' }).eq('post_id', postId);
+  const { data, error, count } = await sb.from('Likes').select('id', { count: 'exact' }).eq('post_id', postId);
   const el = document.getElementById(`likes-${postId}`);
-  el.textContent = (data?.length ?? 0);
+  if(el) el.textContent = (data?.length ?? 0);
 }
 async function toggleLike(postId){
-  if(!currentUser) return alert('Please login first');
+  if(!currentUser) return alert('Login first');
   const { data: existing } = await sb.from('Likes').select('*').eq('post_id', postId).eq('user_id', currentUser.id).limit(1);
   if(existing && existing.length){
     await sb.from('Likes').delete().eq('post_id', postId).eq('user_id', currentUser.id);
@@ -412,7 +411,7 @@ async function toggleLike(postId){
 }
 
 /* comments */
-async function openCommentsUI(postId){
+function openCommentsUI(postId){
   const container = document.getElementById(`comments-container-${postId}`);
   if(!container) return;
   container.innerHTML = `
@@ -421,7 +420,6 @@ async function openCommentsUI(postId){
   `;
   loadCommentsForPost(postId, document.getElementById(`comment-list-${postId}`));
 }
-
 async function addComment(postId){
   const v = document.getElementById(`comment-input-${postId}`).value.trim();
   if(!v || !currentUser) return;
@@ -429,19 +427,17 @@ async function addComment(postId){
   document.getElementById(`comment-input-${postId}`).value='';
   loadCommentsForPost(postId, document.getElementById(`comment-list-${postId}`));
 }
-
 async function loadCommentsForPost(postId, containerEl){
-  const { data, error } = await sb.from('Comments').select('*, users:Users(username)').eq('post_id', postId).order('created_at',{ascending:true});
-  if(error){ console.error(error); return; }
+  const { data } = await sb.from('Comments').select('*, users:Users(username)').eq('post_id', postId).order('created_at',{ascending:true});
+  if(!containerEl) return;
   containerEl.innerHTML = data.map(c => `<div class="small"><strong>${escapeHtml(c.users?.username||'User')}</strong>: ${escapeHtml(c.content)}</div>`).join('');
 }
-
 async function loadCommentsPreview(postId, containerEl){
-  const { data, error } = await sb.from('Comments').select('*, users:Users(username)').eq('post_id', postId).order('created_at',{ascending:false}).limit(2);
+  const { data } = await sb.from('Comments').select('*, users:Users(username)').eq('post_id', postId).order('created_at',{ascending:false}).limit(2);
   if(containerEl) containerEl.innerHTML = data.map(c => `<div class="small"><strong>${escapeHtml(c.users?.username||'User')}</strong>: ${escapeHtml(c.content)}</div>`).join('') + `<div style="margin-top:6px"><button class="btn small" onclick="openCommentsUI('${postId}')">View all</button></div>`;
 }
 
-/* repost / share as story */
+/* repost / share */
 async function repost(postId){
   const { data } = await sb.from('Posts').select('*').eq('id', postId).single();
   if(!data) return;
@@ -457,7 +453,7 @@ async function shareAsStory(postId){
   alert('Shared as story!');
 }
 
-/* ================== MESSAGES (realtime) ================== */
+/* ========== Messages ========== */
 async function loadRecentConvos(){
   const el = document.getElementById('recentConvos'); el.innerHTML='';
   const { data } = await sb.from('Messages').select('*').order('created_at',{ascending:false}).limit(20);
@@ -490,7 +486,7 @@ async function sendMessage(){
   loadMessages();
 }
 
-/* ================== PROFILE ================== */
+/* ========== Profile ========== */
 async function loadProfileMini(){
   if(!currentUser) return;
   const { data } = await sb.from('Users').select('*').eq('id', currentUser.id).single().catch(()=>({data:null}));
@@ -501,22 +497,29 @@ async function loadProfileMini(){
   document.getElementById('miniHandle').textContent = row.handle || ('@' + (row.username || currentUser.email.split('@')[0]).toLowerCase());
 }
 
-async function goProfile(){ showScreen('screen-profile'); const { data } = await sb.from('Users').select('*').eq('id', currentUser.id).single().catch(()=>({data:null})); const row = data ?? {}; document.getElementById('profileAvatar').src = row.profile_image || 'https://via.placeholder.com/96'; document.getElementById('profileName').textContent = row.username || currentUser.email.split('@')[0]; document.getElementById('profileHandleDisplay').textContent = row.handle || ('@' + (row.username || currentUser.email.split('@')[0]).toLowerCase()); profileTab('posts'); }
+async function goProfile(){
+  showScreen('screen-profile');
+  const { data } = await sb.from('Users').select('*').eq('id', currentUser.id).single().catch(()=>({data:null}));
+  document.getElementById('profileAvatar').src = data?.profile_image || 'https://via.placeholder.com/96';
+  document.getElementById('profileName').textContent = data?.username || currentUser.email.split('@')[0];
+  document.getElementById('profileHandleDisplay').textContent = data?.handle || ('@' + (data?.username || currentUser.email.split('@')[0]).toLowerCase());
+  profileTab('posts');
+}
+
 async function profileTab(tab){
   const el = document.getElementById('profileContent'); el.innerHTML='';
   if(tab === 'posts'){
     const { data } = await sb.from('Posts').select('*').eq('user_id', currentUser.id).order('created_at',{ascending:false});
-    data.forEach(p => el.innerHTML += `<div class="card small">${escapeHtml(p.content||'')}${p.image_url?`<img src="${p.image_url}" style="width:100%;margin-top:6px">`:''}</div>`);
-  } else if(tab === 'videos'){
-    const { data } = await sb.from('Posts').select('*').eq('user_id', currentUser.id).is('video_url', null);
-    // show all posts that have video_url
-    el.innerHTML = '<div class="small">Videos (implement filtering)</div>';
+    if(data) data.forEach(p => el.innerHTML += `<div class="card small">${escapeHtml(p.content||'')}${p.image_url?`<img src="${p.image_url}" style="width:100%;margin-top:6px">`:''}</div>`);
+  } else if(tab === 'stories'){
+    const { data } = await sb.from('Stories').select('*').eq('user_id', currentUser.id).order('created_at',{ascending:false});
+    if(data) data.forEach(s => el.innerHTML += `<div class="card small"><img src="${s.image_url}" style="width:100%"></div>`);
   } else {
-    el.innerHTML = '<div class="small">Saved (implement save feature to populate)</div>';
+    el.innerHTML = '<div class="small">Saved (implement save feature)</div>';
   }
 }
 
-/* profile pic upload */
+/* profile pic */
 async function uploadProfilePic(){
   const f = document.getElementById('profilePicFile').files[0];
   if(!f) return alert('Choose an image');
@@ -531,7 +534,7 @@ async function uploadProfilePic(){
   document.getElementById('meAvatar').src = publicUrl;
 }
 
-/* ================== SEARCH (debounced) ================== */
+/* ========== Search debounce ========== */
 function debouncedSearch(){
   clearTimeout(searchTimer);
   searchTimer = setTimeout(async ()=>{
@@ -539,14 +542,15 @@ function debouncedSearch(){
     const sr = document.getElementById('searchResults'); sr.innerHTML='';
     if(!q) return;
     const { data: posts } = await sb.from('Posts').select('*, users:Users(username)').ilike('content', `%${q}%`).limit(10);
-    posts.forEach(p => { const d = document.createElement('div'); d.className='small card'; d.innerHTML = `<strong>${escapeHtml(p.users?.username||'User')}</strong>: ${escapeHtml(p.content||'')}`; sr.appendChild(d); });
+    if(posts) posts.forEach(p => { const d=document.createElement('div'); d.className='small card'; d.innerHTML=`<strong>${escapeHtml(p.users?.username||'User')}</strong>: ${escapeHtml(p.content||'')}`; sr.appendChild(d); });
     const { data: users } = await sb.from('Users').select('*').ilike('username', `%${q}%`).limit(10);
-    users.forEach(u => { const d = document.createElement('div'); d.className='small card'; d.innerHTML = `<strong>${escapeHtml(u.username)}</strong> <div class="small">${escapeHtml(u.handle||'')}</div>`; sr.appendChild(d); });
+    if(users) users.forEach(u => { const d=document.createElement('div'); d.className='small card'; d.innerHTML=`<strong>${escapeHtml(u.username)}</strong> <div class="small">${escapeHtml(u.handle||'')}</div>`; sr.appendChild(d); });
   }, 300);
 }
 
-/* ================== UTIL ================== */
-function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+/* ========== Utility ========== */
+function escapeHtmlStr(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeHtml(s){ return escapeHtmlStr(s); }
 
 </script>
 </body>
