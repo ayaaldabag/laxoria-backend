@@ -1,9 +1,4 @@
 {
-  "welcome": "Bienvenue sur Laxoria",
-  "otp_sent": "Code de v\u00e9rification envoy\u00e9",
-  "identifier_required": "Identifiant requis",
-  "identifier_code_required": "Identifiant et code requis",
-  "invalid_or_expired_code": "Code invalide ou expir\u00e9",
-  "server_error": "Erreur serveur",
-  "user_limit_message": "Le syst\u00e8me permet un maximum de {{max}} utilisateurs."
+  "appName": "Laxoria",
+  "welcome": "Welcome to Laxoria"
 }
